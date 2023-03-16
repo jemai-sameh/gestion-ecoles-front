@@ -1,0 +1,192 @@
+<div class="main-content app-content">
+
+  <div class="container" id="main-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="classes"><b><i class="si si-layers"></i> Liste des salle</b></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal"><i
+              class="si si-plus"></i> Ajouter </button>
+        </div>
+      </div>
+      <div class="container-fluid" id="searchbar">
+        <input (ngModelChange)="searchBy(key.value)" ngModel #key="ngModel" type="search" name="key" id="searchName"
+          class="form-control mr-sm-5" placeholder="Rechercher classes..." required>
+      </div>
+    </nav>
+    <div class="col-md-12">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">classRoomNumber</th>
+            <th scope="col">bloc</th>
+            <th> action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let room of classRoomList" class="col-md-6 col-xl-5 ">
+            <td>{{room.id}}</td>
+            <td>{{room.classRoomNumber}}</td>
+            <td>{{room.bloc}}</td>
+            <td>
+
+              <a type="button" style="margin-right: 10px;" data-toggle="modal"
+                data-target="#exampleModalUpdate" (click)="getClassroom(room.id)"><i class="text-warning si si-note"></i> </a>
+
+                <a type="button" style="margin-right: 10px;" (click)="classroomDelete(room.id)"><i
+                  class="text-danger si si-trash"></i> </a>
+                  <a type="button" style="margin-right: 10px;" data-toggle="modal"
+                data-target="#exampleModalView" (click)="viewClassRoom(room.id)"><i class="text-success si si-eye"></i> </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal Update classroom -->
+  <div class="modal fade" id="exampleModalUpdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Update </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- form Update -->
+          <form>
+            <div *ngIf="!submitted">
+
+
+              <div class="form-group">
+                <label for="exampleFormControlInput1">classRoomNumber</label>
+                <input type="text" class="form-control" id="classRoomNumber" required
+                  [(ngModel)]="classroom.classRoomNumber" name="classRoomNumber" />
+              </div>
+
+              <div class="form-group">
+                <label for="exampleFormControlInput1">bloc</label>
+                <input type="text" class="form-control" id="bloc" required [(ngModel)]="classroom.bloc" name="bloc" />
+              </div>
+              <div class="form-group">
+                <label for="School">Ecole</label>
+                <select class="form-control" id="School" formControlName="school" (ngModelChange)="changeSchool($event)" [(ngModel)]="classroom.school.id"
+                  required name="id">
+                  <option *ngFor="let school of schoolList" [value]="school.id">{{school.name}}</option>
+                </select>
+                <small *ngIf="submitted && ClassRoomDetail.get('school')?.invalid" class="text-danger">School est
+                  obligatoire</small>
+              </div>
+
+              <button (click)="Updateclassroom()" class="btn btn-primary">Update</button>
+
+            </div>
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Add classroom -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ajout </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- form add -->
+          <form [formGroup]="ClassRoomDetail">
+            <div *ngIf="!submitted">
+              <div class="form-group">
+                <label for="exampleFormControlInput1">classRoomNumber</label>
+                <input class="form-control" id="classRoomNumber" required formControlName="classRoomNumber"
+                  name="classRoomNumber" type="string" />
+                <small
+                  *ngIf="ClassRoomDetail.get('classRoomNumber')?.invalid && ClassRoomDetail.get('classRoomNumber')?.touched"
+                  class="text-danger">classRoomNumber est obligatoire</small>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleFormControlInput1">bloc</label>
+                <input class="form-control" id="bloc" required formControlName="bloc" name="bloc" type="string" />
+                <small *ngIf="ClassRoomDetail.get('bloc')?.invalid && ClassRoomDetail.get('bloc')?.touched"
+                  class="text-danger">bloc est obligatoire</small>
+              </div>
+
+              <div class="form-group">
+                <label for="School">Ecole</label>
+                <select class="form-control" id="School" formControlName="school" (ngModelChange)="changeSchool($event)"
+                  required name="id">
+                  <option *ngFor="let school of schoolList" [value]="school.id">{{school.name}}</option>
+                </select>
+                <small *ngIf="submitted && ClassRoomDetail.get('school')?.invalid" class="text-danger">School est
+                  obligatoire</small>
+              </div>
+
+              <button [disabled]="ClassRoomDetail.invalid" class="btn btn-primary" (click)="addClassRoom()">add</button>
+            </div>
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal View classrooùm -->
+  <div class="modal fade" id="exampleModalView" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Détails </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- form View -->
+          <form>
+            <div *ngIf="!submitted">
+              <div class="form-group">
+                <label><b>Id: </b></label> {{classroomes?.id}}
+              </div>
+
+              <div class="form-group">
+                <label><b>ClassRoomNumber: </b></label> {{classroomes?.classRoomNumber}}
+              </div>
+
+              <div class="form-group">
+                <label><b>Bloc: </b></label> {{classroomes?.bloc}}
+              </div>
+
+              <div class="form-group">
+                <label><b>Ecole: </b></label> {{classroomes?.school?.name}} à {{classroomes?.school?.address}}
+              </div>
+
+
+            </div>
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>

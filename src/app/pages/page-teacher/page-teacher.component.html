@@ -1,0 +1,458 @@
+<!-- main-content -->
+<div class="main-content app-content">
+    <div class="container" id="main-container">
+    
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+          <a class="navbar-brand" href="teachers"><b><i class="si si-layers"></i> Liste des professeurs</b></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <button type="button" class="btn btn-info"   data-toggle="modal" data-target="#addTeacherModal"><i class="si si-plus"></i> Ajouter  </button>
+          </div>
+      </div>
+      <div class="container-fluid" id="searchbar">
+          <input (ngModelChange)="searchBy(key.value)" ngModel #key="ngModel" type="search" name="key" id="searchName" class="form-control mr-sm-5" placeholder="Rechercher professeurs..." required>
+      </div>
+    </nav>
+      
+      
+    <div class="col-md-12"> 
+      <table class="table">
+      <thead class="thead-dark">
+          <tr>
+          <th scope="col" (click)="sort('id')">#&nbsp;<i class="fa fa-sort"></i></th>
+          <th scope="col">Image</th>
+          <th scope="col">Nom</th>
+          <th scope="col">Prenom</th>
+          <th scope="col">Adresse</th>
+          <th scope="col">E-mail</th>
+          <th scope="col">N° Téléphone</th>
+          <th scope="col">Matière</th>
+          <th scope="col">Actions</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let teacher of teacherList | orderBy: key1: reverse | paginate: {itemsPerPage:3,currentPage:p} , index as i" class="tab-sub">
+                  <td>{{teacher.id}}</td>
+                  <td><img (error) ="changeSource($event)" [src]="teacher.image" class="rounded-circle" width="50px" height="50px" /></td>
+                  <td>{{teacher.lastName}}</td>
+                  <td>{{teacher.firstName}}</td>
+                  <td>{{teacher.address.address1}},{{teacher.address.address2}} <br>
+                    {{teacher.address.zipCode}},{{teacher.address.city}} <br>
+                    {{teacher.address.country}}</td>
+                  <td>{{teacher.email}}</td>
+                  <td>{{teacher.telephone}}</td>
+                  <td>{{teacher.subject.name}}</td>
+                  
+                  
+                  <td> 
+                    <a type="button" style="margin-right: 10px;" data-mdb-ripple-color="dark" data-toggle="modal" data-target="#updateTeacherModal" (click)="getTeacher(teacher.id)"><i class="text-warning si si-note"></i> </a>
+                      <a type="button" style="margin-right: 10px;" (click)="deleteTeacher(teacher.id)" ><i class="text-danger si si-trash"></i> </a>
+                        <a type="button" style="margin-right: 10px;" data-toggle="modal" data-target="#viewTeacherModal" (click)="viewTeacher(teacher.id)"><i class="text-success si si-eye"></i> </a>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                      <a type="button" style="margin-right: 10px;" (click)="UpdateStatus(teacher.id,-1)">
+                        <i class="text-danger fas fa-times-circle  me-1"></i> </a>
+                     
+                        <a type="button" style="margin-right: 10px;" (click)="UpdateStatus(teacher.id,1)">
+                        <i class="text-success fa fa-check-square  me-1"></i> </a>
+                  </td>
+          </tr>
+      </tbody>
+      </table>
+      <pagination-controls (pageChange)="p = $event"></pagination-controls>
+      </div>
+    </div>
+
+
+    <!-- Modal Add Teacher -->
+<div class="modal fade" id="addTeacherModal" tabindex="-1" role="dialog" aria-labelledby="addTeacherModalName" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addTeacherModalName" >Ajout du professeur </h5>
+          <button #closeModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body col-md-12">
+       <!-- form add -->
+       <form [formGroup]="teacherFormGroup" >
+        <div class="form-group row mb-3">
+          <button (click)="fileInput.click()" style="background-color: transparent; border: none;">
+            <img (error) ="changeSource($event)" [src]="imgUrl" class="rounded-circle" width="100px" height="100px" />
+            <input hidden type="file" #fileInput (change)="onFileInput(fileInput.files)" formControlName="image" name="image">
+          </button>
+          <small *ngIf="submitted && teacherFormGroup.get('image')?.invalid" class="text-danger">Image est obligatoire</small>
+        </div>
+      
+        <div class="form-group row mb-3">
+            <div class="col">
+                <label for="exampleFormControlInput1">Nom</label>
+          <input
+          class="form-control"
+          id="LastName"
+          required
+          formControlName="lastName"
+          name="lastName"
+          type="string"
+        />
+        <small *ngIf="submitted && teacherFormGroup.get('lastName')?.invalid" class="text-danger">Nom est obligatoire</small>
+            </div>
+            <div class="col">
+                <label for="exampleFormControlInput1">Adresse 1</label>
+          <input
+          class="form-control"
+          id="Address1"
+          required
+          formControlName="address1"
+          name="address1"
+          type="string"
+          [(ngModel)]="adr.address1"
+        />
+        <small *ngIf="submitted && teacherFormGroup.get('address1')?.invalid" class="text-danger">Adresse 1 est obligatoire</small>
+            </div>
+        </div>
+   
+          <div class="form-group row mb-3">
+            <div class="col">
+                <label for="exampleFormControlInput1">Prenom</label>
+          <input
+          class="form-control"
+          id="FirstName"
+          required
+          formControlName="firstName"
+          name="firstName"
+          type="string"
+        />
+        <small *ngIf="submitted && teacherFormGroup.get('firstName')?.invalid" class="text-danger">Prenom est obligatoire</small>
+            </div>
+            <div class="col">
+                <label for="exampleFormControlInput1">Adresse 2</label>
+          <input
+          class="form-control"
+          id="Address2"
+          required
+          formControlName="address2"
+          name="address2"
+          type="string"
+          [(ngModel)]="adr.address2"
+        />
+        <small *ngIf="submitted && teacherFormGroup.get('address2')?.invalid" class="text-danger">Adresse 2 est obligatoire</small>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <div class="col">
+                <label for="exampleFormControlInput1">E-mail</label>
+          <input
+          class="form-control"
+          id="Email"
+          required
+          formControlName="email"
+          name="email"
+          type="string"
+        />
+        <small *ngIf="submitted && teacherFormGroup.get('email')?.invalid" class="text-danger">E-mail est obligatoire</small>
+            </div>
+            <div class="col">
+                <label for="exampleFormControlInput1">Ville</label>
+          <input
+          class="form-control"
+          id="City"
+          required
+          formControlName="city"
+          name="city"
+          type="string"
+          [(ngModel)]="adr.city"
+        />
+        <small *ngIf="submitted && teacherFormGroup.get('city')?.invalid" class="text-danger">Ville est obligatoire</small>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <div class="col">
+                <label for="exampleFormControlInput1">N° Tel</label>
+          <input
+          class="form-control"
+          id="Telephone"
+          required
+          formControlName="telephone"
+          name="telephone"
+          type="string"
+        />
+        <small *ngIf="submitted && teacherFormGroup.get('telephone')?.invalid" class="text-danger">N° Tel est obligatoire</small>
+            </div>
+            <div class="col">
+                <label for="exampleFormControlInput1">Code Postal</label>
+          <input
+          class="form-control"
+          id="ZipCode"
+          required
+          formControlName="zipCode"
+          name="zipCode"
+          type="string"
+          [(ngModel)]="adr.zipCode"
+        />
+        <small *ngIf="submitted && teacherFormGroup.get('zipCode')?.invalid" class="text-danger">Code Postale est obligatoire</small>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <div class="col">
+                <label for="exampleFormControlInput1">Matière</label>
+            <select class="form-control" id="Subject" required formControlName="subject" name="subject" type="string">
+              <option *ngFor="let sub of subjectList" [value]="sub.id">{{sub.name}}</option>
+            </select> 
+          <small *ngIf="teacherFormGroup.get('subject')?.invalid && teacherFormGroup.get('subject')?.touched" class="text-danger">Matière est obligatoire</small>
+            </div>
+            <div class="col">
+                <label for="exampleFormControlInput1">Pays</label>
+          <input
+          class="form-control"
+          id="Country"
+          required
+          formControlName="country"
+          name="country"
+          type="string"
+          [(ngModel)]="adr.country"
+        />
+        <small *ngIf="submitted && teacherFormGroup.get('country')?.invalid" class="text-danger">Pays est obligatoire</small>
+            </div>
+        </div>
+  
+         <button class="btn btn-primary" (click)="addTeacher()" >Ajouter</button>
+         
+      </form>
+     
+        </div>
+       
+      </div>
+    </div>
+  </div>
+
+
+      <!-- Modal Update Teacher -->
+<div class="modal fade" id="updateTeacherModal" tabindex="-1" role="dialog" aria-labelledby="updateTeacherModalName" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateTeacherModalName" >Modification du professeur </h5>
+        <button #closeUpdateModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body col-md-12">
+     <!-- form add -->
+     <form [formGroup]="teacherFormGroup2" >
+      <div class="form-group row mb-3">
+        <button (click)="fileInput.click()" style="background-color: transparent; border: none;">
+          <img (error) ="changeSource($event)" [src]="imgUrl"  class="rounded-circle" width="100px" height="100px" />
+          <input hidden type="file" #fileInput (change)="onFileInput(fileInput.files)" formControlName="teacher.image" name="image">
+        </button>
+        <small *ngIf="submitted && teacherFormGroup2.get('image')?.invalid" class="text-danger">Image est obligatoire</small>
+      </div>
+    
+      <div class="form-group row mb-3">
+          <div class="col">
+              <label for="exampleFormControlInput1">Nom</label>
+        <input
+        class="form-control"
+        id="LastName"
+        required
+        formControlName="lastName"
+        name="lastName"
+        type="string"
+      />
+      <small *ngIf="submitted && teacherFormGroup2.get('lastName')?.invalid" class="text-danger">Nom est obligatoire</small>
+          </div>
+          <div class="col">
+              <label for="exampleFormControlInput1">Adresse 1</label>
+        <input
+        class="form-control"
+        id="Address1"
+        required
+        formControlName="address1"
+        name="address1"
+        type="string"
+        [(ngModel)]="adr.address1"
+      />
+      <small *ngIf="submitted && teacherFormGroup2.get('address1')?.invalid" class="text-danger">Adresse 1 est obligatoire</small>
+          </div>
+      </div>
+ 
+        <div class="form-group row mb-3">
+          <div class="col">
+              <label for="exampleFormControlInput1">Prenom</label>
+        <input
+        class="form-control"
+        id="FirstName"
+        required
+        formControlName="firstName"
+        name="firstName"
+        type="string"
+      />
+      <small *ngIf="submitted && teacherFormGroup2.get('firstName')?.invalid" class="text-danger">Prenom est obligatoire</small>
+          </div>
+          <div class="col">
+              <label for="exampleFormControlInput1">Adresse 2</label>
+        <input
+        class="form-control"
+        id="Address2"
+        required
+        formControlName="address2"
+        name="address2"
+        type="string"
+        [(ngModel)]="adr.address2"
+      />
+      <small *ngIf="submitted && teacherFormGroup2.get('address2')?.invalid" class="text-danger">Adresse 2 est obligatoire</small>
+          </div>
+      </div>
+
+      <div class="form-group row mb-3">
+          <div class="col">
+              <label for="exampleFormControlInput1">E-mail</label>
+        <input
+        class="form-control"
+        id="Email"
+        required
+        formControlName="email"
+        name="email"
+        type="string"
+      />
+      <small *ngIf="submitted && teacherFormGroup2.get('email')?.invalid" class="text-danger">E-mail est obligatoire</small>
+          </div>
+          <div class="col">
+              <label for="exampleFormControlInput1">Ville</label>
+        <input
+        class="form-control"
+        id="City"
+        required
+        formControlName="city"
+        name="city"
+        type="string"
+        [(ngModel)]="adr.city"
+      />
+      <small *ngIf="submitted && teacherFormGroup2.get('city')?.invalid" class="text-danger">Ville est obligatoire</small>
+          </div>
+      </div>
+
+      <div class="form-group row mb-3">
+          <div class="col">
+              <label for="exampleFormControlInput1">N° Tel</label>
+        <input
+        class="form-control"
+        id="Telephone"
+        required
+        formControlName="telephone"
+        name="telephone"
+        type="string"
+      />
+      <small *ngIf="submitted && teacherFormGroup2.get('telephone')?.invalid" class="text-danger">N° Tel est obligatoire</small>
+          </div>
+          <div class="col">
+              <label for="exampleFormControlInput1">Code Postal</label>
+        <input
+        class="form-control"
+        id="ZipCode"
+        required
+        formControlName="zipCode"
+        name="zipCode"
+        type="string"
+        [(ngModel)]="adr.zipCode"
+      />
+      <small *ngIf="submitted && teacherFormGroup2.get('zipCode')?.invalid" class="text-danger">Code Postale est obligatoire</small>
+          </div>
+      </div>
+
+      <div class="form-group row mb-3">
+          <div class="col">
+              <label for="exampleFormControlInput1">Matière</label>
+              <select class="form-control" id="teacher"  formControlName="subject"  (ngModelChange)="changeSubject($event)" required [(ngModel)]="teacherModel.subject.id" name="id" >
+                <option *ngFor="let subject of subjectList" [value]="subject.id">{{subject.name}}</option>
+              </select>
+        <small *ngIf="teacherFormGroup2.get('subject')?.invalid && teacherFormGroup.get('subject')?.touched" class="text-danger">Matière est obligatoire</small>
+          </div>
+          <div class="col">
+              <label for="exampleFormControlInput1">Pays</label>
+        <input
+        class="form-control"
+        id="Country"
+        required
+        formControlName="country"
+        name="country"
+        type="string"
+        [(ngModel)]="adr.country"
+      />
+      <small *ngIf="submitted && teacherFormGroup2.get('country')?.invalid" class="text-danger">Pays est obligatoire</small>
+          </div>
+      </div>
+
+       <button class="btn btn-primary" (click)="updateTeacher()" >Modifier</button>
+       
+    </form>
+   
+      </div>
+     
+    </div>
+  </div>
+</div>
+
+<!-- Modal View Teacher -->
+<div class="modal fade" id="viewTeacherModal" tabindex="-1" role="dialog" aria-labelledby="viewTeacherModalName"
+aria-hidden="true">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="viewTeacherModalName">Détails du professeur</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- form View -->
+      <form >
+        <div class="form-group row mb-3">
+          <div class="col">
+
+            <div class="form-group">
+              <label><b>{{teacher!.lastName}} {{teacher!.firstName}}  </b></label> 
+            </div>
+            <img (error) ="changeSource($event)" [src]="teacher.image" class="rounded-circle" width="100px" height="100px" />
+          </div>
+          <div class="col">
+
+
+        <div class="form-group">
+          <label><b>Adresse: </b></label> {{teacher!.address!.address1}}, {{teacher!.address!.address2}} | {{teacher!.address!.zipCode}}, {{teacher!.address!.city}}, {{teacher!.address!.country}}
+        </div>
+
+        <div class="form-group">
+          <label><b>E-mail: </b></label> {{teacher!.email}}  
+        </div>
+
+        <div class="form-group">
+          <label><b>N° Téléphone: </b></label> {{teacher!.telephone}}
+        </div>
+
+        <div class="form-group">
+          <label><b>Matière: </b></label> {{teacher!.subject!.name}}  
+        </div>
+          </div>
+
+      </div>
+
+    </form>
+
+    </div>
+
+  </div>
+</div>
+</div>
+    
+
+    </div>
+    <!-- main-content closed -->
+    

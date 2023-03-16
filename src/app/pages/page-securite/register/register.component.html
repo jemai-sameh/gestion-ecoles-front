@@ -1,0 +1,274 @@
+<div class="bg" style="background-image: url('../assets/img/photos/school.jpg');">
+    <div class="page">
+
+
+        <div class="page-single">
+            <div class="container">
+                <div class="row">
+                    <div>
+                        <div class="card-sigin mt-5 mt-md-0">
+                            <!-- Demo content-->
+                            <div class="main-card-signin d-md-flex">
+                                <div class="wd-100p">
+                                    <div class="login100-form-avatar"><a href="index.html"></a></div>
+                                    <div class="">
+                                        <div class="main-signup-header">
+                                            <h2>Inscription</h2>
+                                            <div class="panel panel-primary">
+                                                <div class="panel-body tabs-menu-body border-0 p-3">
+                                                    <div class="tab-content">
+                                                        <div class="tab-pane active" id="tab5">
+                                                            <div class="alert alert-danger" *ngIf="errorMsg">
+                                                                {{errorMsg}}
+                                                            </div>
+                                                            <form action="#" class="user">
+                                                                <div class="form-group">
+                                                                    <button (click)="fileInput.click()"
+                                                                        style="background-color: transparent; border: none;">
+                                                                        <img (error)="changeSource($event)"
+                                                                            [src]="imgUrl" class="rounded-circle"
+                                                                            width="70px" height="70px" />
+                                                                        <input hidden type="file" #fileInput
+                                                                            (change)="onFileInput(fileInput.files)"
+                                                                            [(ngModel)]="registerRequest.image"
+                                                                            name="image">
+                                                                    </button>
+                                                                </div>
+                                                                <div class="form-group row mb-2">
+                                                                    <div class="col">
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fas fa-user"></i></span>
+                                                                            </div>
+                                                                            <input type="text"
+                                                                                class="form-control form-control-user"
+                                                                                style="background-color: #fff; color: #000;"
+                                                                                id="exampleInputEmail"
+                                                                                aria-describedby="emailHelp"
+                                                                                name="firstName"
+                                                                                placeholder="Entrer votre prénom..."
+                                                                                [(ngModel)]="registerRequest.firstName">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fa fa-map-marker"></i></span>
+                                                                            </div>
+                                                                            <input type="string"
+                                                                                class="form-control form-control-user"
+                                                                                style="background-color: #fff; color: #000;"
+                                                                                id="address1"
+                                                                                aria-describedby="emailHelp"
+                                                                                name="address1"
+                                                                                placeholder="Entrer l'adresse 1..."
+                                                                                [(ngModel)]="adr.address1"
+                                                                                value="{{adr.address1}}">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-2">
+                                                                    <div class="col">
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fas fa-user"></i></span>
+                                                                            </div>
+                                                                            <input type="text"
+                                                                                class="form-control form-control-user"
+                                                                                style="background-color: #fff; color: #000;"
+                                                                                id="exampleInputEmail"
+                                                                                aria-describedby="emailHelp"
+                                                                                name="lastName"
+                                                                                placeholder="Entrer votre nom..."
+                                                                                [(ngModel)]="registerRequest.lastName">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fa fa-map-marker"></i></span>
+                                                                            </div>
+                                                                            <input type="string"
+                                                                                class="form-control form-control-user"
+                                                                                style="background-color: #fff; color: #000;"
+                                                                                id="address2"
+                                                                                aria-describedby="emailHelp"
+                                                                                name="address2"
+                                                                                placeholder="Entrer l'adresse 2..."
+                                                                                [(ngModel)]="adr.address2"
+                                                                                value="{{adr.address2}}">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-2">
+                                                                    <div class="col">
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fa fa-envelope"></i></span>
+                                                                            </div>
+                                                                            <input type="email"
+                                                                                class="form-control form-control-user"
+                                                                                style="background-color: #fff; color: #000;"
+                                                                                id="exampleInputEmail"
+                                                                                aria-describedby="emailHelp"
+                                                                                name="email"
+                                                                                placeholder="Entrer votre adresse e-mail..."
+                                                                                [(ngModel)]="registerRequest.email">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fa fa-map-marker"></i></span>
+                                                                            </div>
+                                                                            <input type="string"
+                                                                                class="form-control form-control-user"
+                                                                                style="background-color: #fff; color: #000;"
+                                                                                id="city" aria-describedby="emailHelp"
+                                                                                name="city"
+                                                                                placeholder="Entrer votre ville..."
+                                                                                [(ngModel)]="adr.city"
+                                                                                value="{{adr.city}}">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-2">
+                                                                    <div class="col">
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fas fa-key"></i></span>
+                                                                            </div>
+                                                                            <input type="password"
+                                                                                class="form-control form-control-user"
+                                                                                style="background-color: #fff; color: #000;"
+                                                                                name="password"
+                                                                                id="exampleInputPassword"
+                                                                                placeholder="Entrer votre mot de passe..."
+                                                                                [(ngModel)]="registerRequest.password">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fa fa-map-marker"></i></span>
+                                                                            </div>
+                                                                            <input type="string"
+                                                                                class="form-control form-control-user"
+                                                                                style="background-color: #fff; color: #000;"
+                                                                                id="zipCode"
+                                                                                aria-describedby="emailHelp"
+                                                                                name="zipCode"
+                                                                                placeholder="Entrer code postal..."
+                                                                                [(ngModel)]="adr.zipCode"
+                                                                                value="{{adr.zipCode}}">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-2">
+                                                                    <div class="col">
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fa fa-phone"></i></span>
+                                                                            </div>
+                                                                            <input type="number"
+                                                                                class="form-control form-control-user"
+                                                                                style="background-color: #fff; color: #000;"
+                                                                                id="exampleInputEmail"
+                                                                                aria-describedby="emailHelp"
+                                                                                name="telephone"
+                                                                                placeholder="Entrer votre n°tel..."
+                                                                                [(ngModel)]="registerRequest.telephone">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fa fa-map-marker"></i></span>
+                                                                            </div>
+                                                                            <input type="string"
+                                                                                class="form-control form-control-user"
+                                                                                style="background-color: #fff; color: #000;"
+                                                                                id="country"
+                                                                                aria-describedby="emailHelp"
+                                                                                name="country"
+                                                                                placeholder="Entrer votre pays..."
+                                                                                [(ngModel)]="adr.country"
+                                                                                value="{{adr.country}}">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-2">
+                                                                    <div class="col">
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fa fa-birthday-cake"></i></span>
+                                                                            </div>
+                                                                            <input type="date"
+                                                                                class="form-control form-control-user"
+                                                                                style="background-color: #fff; color: #000;"
+                                                                                id="exampleInputEmail"
+                                                                                aria-describedby="emailHelp"
+                                                                                name="dateOfBirth"
+                                                                                placeholder="Entrer date naissance..."
+                                                                                [ngModel]="registerRequest.dateOfBirth | date:'yyyy-MM-dd'"
+                                                                                (ngModelChange)="registerRequest.dateOfBirth=$event"
+                                                                                #dateOfBirth
+                                                                                value="{{registerRequest.dateOfBirth}}">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="si si-layers"></i></span>
+                                                                            </div>
+                                                                            <select class="form-control" id="classe"
+                                                                                required
+                                                                                [(ngModel)]="registerRequest.classe.id"
+                                                                                name="classe" type="string"
+                                                                                style="background-color: #fff; color: #000;">
+                                                                                <option value=-1 disabled checked>
+                                                                                    Sélectionner votre classe</option>
+                                                                                <option *ngFor="let cls of classList"
+                                                                                    [value]="cls.id">{{cls.levelClass}} {{cls.labelClass}}
+                                                                                </option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <a class="btn btn-primary btn-block"
+                                                                    (click)="register()">S'inscrire <i
+                                                                        class="fas fa-check" aria-hidden="true"></i></a>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="main-signin-footer text-center mt-3">
+                                                <a [routerLink]="['/login']">Se connecter</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>

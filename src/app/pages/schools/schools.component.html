@@ -1,0 +1,292 @@
+<div class="main-content app-content">
+
+  <div class="container" id="main-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="classes"><b><i class="si si-layers"></i> Liste des école</b></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal"><i
+              class="si si-plus"></i> Ajouter </button>
+        </div>
+      </div>
+      <div class="container-fluid" id="searchbar">
+        <input (ngModelChange)="searchBy(key.value)" ngModel #key="ngModel" type="search" name="key" id="searchName"
+          class="form-control mr-sm-5" placeholder="Rechercher classes..." required>
+      </div>
+    </nav>
+    <div class="col-md-12">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Address</th>
+            <th> action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let sch of schools" class="col-md-6 col-xl-5 " class="tab-sub">
+            <td>{{sch.id}}</td>
+            <td>{{sch.name}}</td>
+            <td>{{sch.address}}</td>
+            <td>
+              <!-- <button type="button" class="btn btn-info" data-toggle="modal"></button> -->
+              <!-- data-target="#exampleModalUpdate">Update</button> -->
+              <a type="button" style="margin-right: 10px;" data-toggle="modal" data-target="#exampleModalUpdate" (click)="getSchool(sch.id)">
+                <i
+                  class="text-warning si si-note"></i>
+                 </a>
+
+              <a type="button" style="margin-right: 10px;" (click)="deleteSchool(sch.id)"><i class="text-danger si si-trash"></i> </a>
+                <a type="button" style="margin-right: 10px;" data-toggle="modal" data-target="#exampleModalView" (click)="viewSchool(sch.id)"><i
+                    class=" text-success si si-eye"></i> </a>
+                <a type="button" style="margin-right: 10px;" data-toggle="modal" data-target="#addadminModal" (click)="getSchool(sch.id)">
+                  <i class="text-success fa fa-address-book-o"></i> </a>
+                <a type="button" data-toggle="modal" data-target="#SubjectModal"
+                  (click)="findAllAdminBySchool(sch.id)"><i class="text-success si si-eye"></i> </a>
+
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- Modal Update Societe -->
+  <div class="modal fade" id="exampleModalUpdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Update </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- form Update -->
+          <form>
+            <div *ngIf="!submitted">
+
+
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Name</label>
+                <input type="text" class="form-control" id="name" required [(ngModel)]="school.name" name="name" />
+              </div>
+
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Address</label>
+                <input type="text" class="form-control" id="address" required [(ngModel)]="school.address"
+                  name="address" />
+              </div>
+
+              <button (click)="ModifSchool()" class="btn btn-primary">Update</button>
+
+            </div>
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Add Section -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ajout </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- form add -->
+          <form [formGroup]="SchoolDetail">
+            <div *ngIf="!submitted">
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Name</label>
+                <input class="form-control" id="name" required formControlName="name" name="name" type="string" />
+                <small *ngIf="SchoolDetail.get('name')?.invalid && SchoolDetail.get('name')?.touched"
+                  class="text-danger">name est obligatoire</small>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Address</label>
+                <input class="form-control" id="address" required formControlName="address" name="address"
+                  type="string" />
+                <small *ngIf="SchoolDetail.get('address')?.invalid && SchoolDetail.get('address')?.touched"
+                  class="text-danger">Address est obligatoire</small>
+              </div>
+
+              <button [disabled]="SchoolDetail.invalid" class="btn btn-primary" (click)="ajoutSchool()">Ajouter</button>
+            </div>
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal View Section -->
+  <div class="modal fade" id="exampleModalView" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Détails </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- form View -->
+          <form>
+            <div *ngIf="!submitted">
+              <div class="form-group">
+                <label><b>Id: </b></label> {{Scho?.id}}
+              </div>
+
+              <div class="form-group">
+                <label><b>Name: </b></label> {{Scho?.name}}
+              </div>
+
+              <div class="form-group">
+                <label><b>Address: </b></label> {{Scho?.address}}
+              </div>
+
+
+            </div>
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- Modal Add admin -->
+  <div class="modal fade" id="addadminModal" tabindex="-1" role="dialog" aria-labelledby="addadminModalName"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addadminModalName">Ajout d'administration </h5>
+          <button #closeModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body col-md-12">
+          <!-- form add -->
+          <form [formGroup]="adminFormGroup">
+
+
+            <div class="form-group row mb-3">
+              <div class="col">
+                <label for="exampleFormControlInput1">Nom</label>
+                <input class="form-control" id="LastName" required formControlName="lastName" name="lastName"
+                  type="string" />
+                <small *ngIf="submitted && adminFormGroup.get('lastName')?.invalid" class="text-danger">Nom est
+                  obligatoire</small>
+              </div>
+
+            </div>
+
+            <div class="form-group row mb-3">
+              <div class="col">
+                <label for="exampleFormControlInput1">Prenom</label>
+                <input class="form-control" id="FirstName" required formControlName="firstName" name="firstName"
+                  type="string" />
+                <small *ngIf="submitted && adminFormGroup.get('firstName')?.invalid" class="text-danger">Prenom est
+                  obligatoire</small>
+              </div>
+
+            </div>
+
+            <div class="form-group row mb-3">
+              <div class="col">
+                <label for="exampleFormControlInput1">E-mail</label>
+                <input class="form-control" id="Email" required formControlName="email" name="email" type="string" />
+                <small *ngIf="submitted && adminFormGroup.get('email')?.invalid" class="text-danger">E-mail est
+                  obligatoire</small>
+              </div>
+
+            </div>
+
+            <div class="form-group row mb-3">
+              <div class="col">
+                <label for="exampleFormControlInput1">N° Tel</label>
+                <input class="form-control" id="telephone" required formControlName="telephone" name="telephone"
+                  type="string" />
+                <small *ngIf="submitted && adminFormGroup.get('telephone')?.invalid" class="text-danger">N° Tel est
+                  obligatoire</small>
+              </div>
+
+            </div>
+
+            <button class="btn btn-primary" (click)="addadmin()">Ajouter</button>
+
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Admins -->
+  <div class="modal fade" id="SubjectModal" tabindex="-1" role="dialog" aria-labelledby="addClassModalName"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addClassModalName">liste des administrateurs</h5>
+          <button #closeModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- form subject -->
+          <div class="container">
+
+
+
+            <div class="col-md-12 bg-light">
+              <table class="table " style="background-color: #454d55!important; border: none !important;;">
+
+                <tbody>
+                  <tr *ngFor="let entity of AdminsListSchool"
+                    style="background-color: #454d55!important; border: none !important;;">
+                    <th><b>Nom </b></th>
+                    <td>{{entity.firstName}} {{entity.lastName}}</td>
+                    <th><b>, Numéro télephone </b></th>
+                    <td>{{entity.telephone}}
+                    <td>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+</div>

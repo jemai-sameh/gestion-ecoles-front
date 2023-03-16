@@ -1,0 +1,16 @@
+.form-control.ng-touched.ng-invalid {
+    border: 1px solid red;
+}
+.form-control.ng-touched.ng-valid {
+    border: 1px solid green;
+}
+.tab-sec{
+    background-color: rgb(28, 60, 77);
+}
+.table{
+    text-align: center;
+}
+.navbar-brand {
+    color: rgb(199, 177, 201);
+}
+#searchbar{position:relative; width:350px; height:auto;}

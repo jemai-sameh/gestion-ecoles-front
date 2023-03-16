@@ -1,0 +1,46 @@
+input[type=email]:focus {
+    border: 3px solid blue;
+  }
+  input[type=password]:focus {
+    border: 3px solid blue;
+  }
+  input[type=text]:focus {
+    border: 3px solid blue;
+  }
+  .card-sigin{
+    background-color: gray;
+  }
+    .main-card-signin{
+      background-color: gray;
+    }
+  
+    .form-email {
+      background-color: #fff;
+      color: #fff;
+  }
+     .input-group-prepend span{
+      width: 40px;
+      background-color: #1298ffbe;
+      color: black;
+      border:0 !important;
+      }
+
+      .login100-form-avatar {
+        width: 50px;
+        height: 10px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin: 10px auto;
+      }
+  
+      h2 {
+        margin-top: -30px;
+        margin-bottom: 10px;
+          text-align: center;
+      }
+  
+      .font-weight-semibold {
+        color: #000;
+      }
+
+  
