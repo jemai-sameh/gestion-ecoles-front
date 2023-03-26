@@ -10,6 +10,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { Ng2OrderModule } from 'ng2-order-pipe';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { AuthIntercepterService } from './services/interceptor/authInterceptor.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,7 +32,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     Ng2OrderModule,
     NgxPaginationModule
   ],
-  providers: [],
+  providers: [{provide :HTTP_INTERCEPTORS, useClass:AuthIntercepterService,multi :true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
