@@ -44,4 +44,10 @@ export class SchoolsService {
     );
 
   }
+
+  findAllByAdminIsNull(): Observable<School[]> {
+    return this.http.get<School[]>(`${this.baseurl}/findAllByAdminIsNull`).pipe(
+      map((response:any) => response as School[])
+    );
+  }
 }

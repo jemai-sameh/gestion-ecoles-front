@@ -60,7 +60,7 @@ export class PageAdminComponent implements OnInit {
   }
 
   getSchools() {
-    this.schoolService.getSchoolList().subscribe({
+    this.schoolService.findAllByAdminIsNull().subscribe({
       next:res=>this.schoolList=res,
       error:err=>console.error(err)
     })

@@ -31,6 +31,10 @@ import { PageAdminComponent } from './pages/admin/page-admin/page-admin.componen
 @NgModule({
   declarations: [
     AppComponent,
+    PageAdminComponent,
+    ClassroomsComponent,
+    PageClassComponent,
+
     PageSectionComponent,
     PageSubjectComponent,
     HeaderComponent,
@@ -39,8 +43,6 @@ import { PageAdminComponent } from './pages/admin/page-admin/page-admin.componen
     SchoolsComponent,
     LoginComponent,
     RegisterComponent,
-    ClassroomsComponent,
-    PageClassComponent,
     HomeComponent,
     PageTeacherComponent,
     SafeUrlPipe,
@@ -48,7 +50,6 @@ import { PageAdminComponent } from './pages/admin/page-admin/page-admin.componen
     AcceuilComponent,
     PageAbsenceComponent,
     PagePlanningComponent,
-    PageAdminComponent,
   ],
   imports: [
     HttpClientModule,

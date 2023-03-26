@@ -123,7 +123,7 @@
             <div class="form-group">
               <label for="Label">Libelle</label>
               <input class="form-control" id="Label" required formControlName="label" name="label" type="string"
-                (ngModelChange)="changeGenericCode($event,'sectionFormGroup2')" />
+              (ngModelChange)="changeGenericCode($event,'sectionFormGroup2')" />
               <small *ngIf="submitted && sectionFormGroup2.get('label')?.invalid" class="text-danger">Libelle est
                 obligatoire</small>
             </div>

@@ -155,8 +155,26 @@ export class PageClassComponent implements OnInit {
           this.getSubjectList();
           this.submitted = false;
           this.subjectFormGroup.reset();
-          location.reload();
           this.toastrService.success('Success!', 'Votre matière a été ajoutée!');
+          location.reload();
+
+        },
+      });
+    
+
+  }
+  RemoveMatiereToClass(idSubject:number){
+    
+    let idClasse=this.classeSubject.id;
+    this.classService.removeSubjectFromClasse(idSubject,idClasse)
+      .subscribe({
+        next: (res) => {
+          this.getSubjectList();
+          this.submitted = false;
+          this.subjectFormGroup.reset();
+          this.toastrService.success('Success!', 'Votre matière du class a été supprimer!');
+          location.reload();
+
         },
       });
     

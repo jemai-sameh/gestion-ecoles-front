@@ -53,7 +53,7 @@
                   <a type="button" style="margin-right: 10px;" data-toggle="modal"
                 data-target="#viewClassModal" (click)="viewClass(class.id)"><i class="text-success si si-eye"></i> </a>
                 <a type="button" style="margin-right: 10px;" data-toggle="modal"
-                data-target="#SubjectModal" (click)="listSubjectModal(class)"><i class="si si-eye"></i> </a>
+                data-target="#SubjectModal" (click)="listSubjectModal(class)"><i class="fa fa-book"></i> </a>
 
             </td>
           </tr>
@@ -289,7 +289,7 @@
                      <td>{{subject.name}}</td>
                       <th> Coefficient : </th>
                       <td>{{subject.coefficient}}<td>
-                      <a><i class="si si-trash text-danger"></i></a>
+                      <a type="button" (click)="RemoveMatiereToClass(subject.id)"><i class="si si-trash text-danger"></i></a>
                     </td>
                   </tr>
                 </tbody>

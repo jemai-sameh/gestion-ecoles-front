@@ -53,4 +53,10 @@ export class ClassService {
       map((response:any) => response as Classe)
     );
   }
+
+  removeSubjectFromClasse(idSubject:number ,idClass: number): Observable<Classe> {
+    return this.http.post(`${this.baseurl}/removeSubjectFromClasse/${idSubject}/${idClass}`,{}).pipe(
+      map((response:any) => response as Classe)
+    );
+  }
 }

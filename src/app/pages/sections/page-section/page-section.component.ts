@@ -21,6 +21,9 @@ export class PageSectionComponent implements OnInit {
   sectionModel:Section = new Section();
   section:Section = new Section() ; // used for view 
 
+  letters!:string;
+
+
   @ViewChild('closeModalBtn') closeModalBtn!: ElementRef;
   @ViewChild('closeUpdateModalBtn') closeUpdateModalBtn!: ElementRef;
 
@@ -86,26 +89,15 @@ export class PageSectionComponent implements OnInit {
   }
 
   addSection()
-  {
-    /*this.sectionModel.label = this.sectionFormGroup.value.label
-
-    let words = this.sectionModel.label.split(" ");
-    let premieresLettres:string[] = [];
-    let letters=''
-    words.forEach(word => {
-      letters+=word.charAt(0).toLocaleUpperCase();
-    });
-    console.log(letters)
-*/
-  
+  {  
     this.submitted = true;
     if(this.sectionFormGroup.invalid)
     {
       return ;
     }
-      this.sectionModel.code = this.sectionFormGroup.value.code;
+      this.sectionModel.code = this.sectionFormGroup.get("code")?.value;
       this.sectionModel.label = this.sectionFormGroup.value.label
-    
+
       this.sectionService.saveSection(this.sectionModel)
         .subscribe({
           next: (res) => {
@@ -146,8 +138,9 @@ export class PageSectionComponent implements OnInit {
     {
       return ;
     }
-    this.sectionModel.code = this.sectionFormGroup2.value.code;
+    this.sectionModel.code = this.sectionFormGroup2.get("code")?.value;
     this.sectionModel.label = this.sectionFormGroup2.value.label;
+
     
     this.sectionService.saveSection(this.sectionModel)
     .subscribe({
@@ -215,14 +208,14 @@ export class PageSectionComponent implements OnInit {
 
     let words = this.sectionModel.label.split(" ");
     let premieresLettres:string[] = [];
-    let letters:string=''
+    this.letters=''
     words.forEach(word => {
-      letters+=word.charAt(0).toLocaleUpperCase();
+      this.letters+=word.charAt(0).toLocaleUpperCase();
     });
     if (name=="sectionFormGroup")
-      this.sectionFormGroup.get("code")?.setValue(letters);
+      this.sectionFormGroup.get("code")?.setValue(this.letters);
     if (name=="sectionFormGroup2")
-           this.sectionFormGroup2.get("code")?.setValue(letters);
+           this.sectionFormGroup2.get("code")?.setValue(this.letters);
     
  
   }
