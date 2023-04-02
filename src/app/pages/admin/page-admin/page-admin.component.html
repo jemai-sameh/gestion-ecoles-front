@@ -1,0 +1,206 @@
+<!-- main-content -->
+<div class="main-content app-content">
+    <div class="container" id="main-container">
+  
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="admins"><b><i class="si si-layers"></i> Liste des administrations</b></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addadminModal"><i
+                class="si si-plus"></i> Ajouter </button>
+          </div>
+        </div>
+        <div class="container-fluid" id="searchbar">
+          <input (ngModelChange)="searchBy(key.value)" ngModel #key="ngModel" type="search" name="key" id="searchName"
+            class="form-control mr-sm-5" placeholder="Rechercher élèves..." required>
+        </div>
+      </nav>
+  
+  
+      <div class="col-md-12">
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col" (click)="sort('id')">#&nbsp;<i class="fa fa-sort"></i></th>
+              <th scope="col">Nom</th>
+              <th scope="col">Prenom</th>
+              <th scope="col">E-mail</th>
+              <th scope="col">N° Téléphone</th>
+              <th scope="col">School</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let admin of adminList | orderBy: key1: reverse | paginate: {itemsPerPage:3,currentPage:p} , index as i"
+              class="tab-sub">
+              <td>{{admin?.id}}</td>
+              <td>{{admin?.lastName}}</td>
+              <td>{{admin?.firstName}}</td>
+              <td>{{admin?.email}}</td>
+              <td>{{admin?.telephone}}</td>
+              <td>{{admin?.school?.name}}</td>  
+              <td>
+                <!--<button type="button" class="btn btn-danger btn-floating me-1" (click)="delete(admin.id)"><i
+                    class="si si-trash"></i> </button>-->
+                    <a type="button" style="margin-right: 10px;"  data-toggle="modal"
+                  data-target="#viewadminModal" (click)="viewadmin(admin.id)">
+                  <i style="color: rgb(0, 174, 255);" class=" si si-eye"></i> </a>
+              
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                  <a type="button" style="margin-right: 10px;" (click)="UpdateStatus(admin.id,-1)">
+                    <i class=" text-danger fas fa-times-circle  me-1"></i> </a>
+                 
+                    <a  type="button"  (click)="UpdateStatus(admin.id,1)">
+                    <i class="text-success fa fa-check-square  me-1"></i> </a>
+              
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+      </div>
+    </div>
+  
+  
+    <!-- Modal Add admin -->
+    <div class="modal fade" id="addadminModal" tabindex="-1" role="dialog" aria-labelledby="addadminModalName"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addadminModalName">Ajout d'administration </h5>
+            <button #closeModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body col-md-12">
+            <!-- form add -->
+            <form [formGroup]="adminFormGroup">
+              
+  
+              <div class="form-group row mb-3">
+                <div class="col">
+                  <label for="exampleFormControlInput1">Nom</label>
+                  <input class="form-control" id="LastName" required formControlName="lastName" name="lastName"
+                    type="string" />
+                  <small *ngIf="submitted && adminFormGroup.get('lastName')?.invalid" class="text-danger">Nom est
+                    obligatoire</small>
+                </div>
+                
+              </div>
+  
+              <div class="form-group row mb-3">
+                <div class="col">
+                  <label for="exampleFormControlInput1">Prenom</label>
+                  <input class="form-control" id="FirstName" required formControlName="firstName" name="firstName"
+                    type="string" />
+                  <small *ngIf="submitted && adminFormGroup.get('firstName')?.invalid" class="text-danger">Prenom est
+                    obligatoire</small>
+                </div>
+                
+              </div>
+  
+              <div class="form-group row mb-3">
+                <div class="col">
+                  <label for="exampleFormControlInput1">E-mail</label>
+                  <input class="form-control" id="Email" required formControlName="email" name="email" type="string" />
+                  <small *ngIf="submitted && adminFormGroup.get('email')?.invalid" class="text-danger">E-mail est
+                    obligatoire</small>
+                </div>
+                
+              </div>
+  
+              <div class="form-group row mb-3">
+                <div class="col">
+                  <label for="exampleFormControlInput1">N° Tel</label>
+                  <input class="form-control" id="telephone" required formControlName="telephone" name="telephone"
+                    type="string" />
+                  <small *ngIf="submitted && adminFormGroup.get('telephone')?.invalid" class="text-danger">N° Tel est
+                    obligatoire</small>
+                </div>
+                
+              </div>
+  
+              <div class="form-group row mb-3">
+                <div class="col">
+                  <label for="exampleFormControlInput1">School</label>
+                  <select class="form-control" id="school" required formControlName="school" name="school" type="string">
+                    <option *ngFor="let school of schoolList" [value]="school.id">{{school.name}}</option>
+                  </select>
+                  <small *ngIf="adminFormGroup.get('school')?.invalid && adminFormGroup.get('school')?.touched"
+                    class="text-danger">school est obligatoire</small>
+                </div>
+              </div>
+  
+              <button class="btn btn-primary" (click)="addadmin()">Ajouter</button>
+  
+            </form>
+  
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  
+    <!-- Modal View admin -->
+    <div class="modal fade" id="viewadminModal" tabindex="-1" role="dialog" aria-labelledby="viewadminModalName"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="viewadminModalName">Détails d'élève</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- form View -->
+              <div class="form-group row mb-3">
+                <div class="col">
+                  <div class="form-group">
+                    <label><b>active  </b></label> 
+                    &nbsp;&nbsp;
+                    <i *ngIf=" !admin.active" style="color: red;" class="fa fa-circle" aria-hidden="true"></i>
+                    <i *ngIf="admin.active" style="color: green;"  class="fa fa-circle" aria-hidden="true"></i>
+
+                   
+                  </div>
+                  <div class="form-group">
+                    <label><b>Nom: </b></label> {{admin?.lastName}}
+                  </div>
+  
+                  <div class="form-group">
+                    <label><b>Prénom: </b></label> {{admin?.firstName}}
+                  </div>
+                </div>
+                <div class="col">
+                   
+                  <div class="form-group">
+                    <label><b>E-mail: </b></label> {{admin?.email}}
+                  </div>
+  
+                  <div class="form-group">
+                    <label><b>N° Téléphone: </b></label> {{admin?.telephone}}
+                  </div>
+  
+                  <div class="form-group">
+                    <label><b>Ecole: </b></label> {{admin?.school?.name}}
+                  </div>
+                </div>
+  
+              </div>  
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  
+</div>
+  <!-- main-content closed -->
