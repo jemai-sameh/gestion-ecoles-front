@@ -1,0 +1,307 @@
+<!-- main-content -->
+<div class="main-content app-content">
+  <div class="container" id="main-container">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="classes"><b><i class="si si-layers"></i> Liste des classes</b></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addClassModal"><i
+              class="si si-plus"></i> Ajouter </button>
+        </div>
+      </div>
+      <div class="container-fluid" id="searchbar">
+        <input (ngModelChange)="searchBy(key.value)" ngModel #key="ngModel" type="search" name="key" id="searchName"
+          class="form-control mr-sm-5" placeholder="Rechercher classes..." required>
+      </div>
+    </nav>
+
+
+    <div class="col-md-12">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col" (click)="sort('id')">#&nbsp;<i class="fa fa-sort"></i></th>
+            <th scope="col">Niveau</th>
+            <th scope="col">Libelle</th>
+            <th scope="col">Année Scolaire </th>
+            <th scope="col">Section</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let class of classList | orderBy: key1: reverse | paginate: {itemsPerPage:3,currentPage:p} , index as i"
+            class="tab-sub">
+            <td>{{class.id}}</td>
+            <td>{{class.levelClass}}</td>
+            <td>{{class.labelClass}}</td>
+            <td>{{class.firstSchoolYear}} / {{class.lastSchoolYear}}</td>
+            <td>{{class.section.label}}</td>
+
+
+            <td>
+              <a type="button" style="margin-right: 10px;" data-mdb-ripple-color="dark"
+                data-toggle="modal" data-target="#updateClassModal" (click)="getClass(class.id)"><i
+                  class="text-warning si si-note"></i> </a>
+                  <a type="button" style="margin-right: 10px;" (click)="deleteClass(class.id)"><i
+                  class="text-danger si si-trash"></i> </a>
+                  <a type="button" style="margin-right: 10px;" data-toggle="modal"
+                data-target="#viewClassModal" (click)="viewClass(class.id)"><i class="text-success si si-eye"></i> </a>
+                <a type="button" style="margin-right: 10px;" data-toggle="modal"
+                data-target="#SubjectModal" (click)="listSubjectModal(class)"><i class="fa fa-book"></i> </a>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <pagination-controls (pageChange)="p = $event"></pagination-controls>
+    </div>
+  </div>
+
+  <!-- Modal Add Class -->
+  <div class="modal fade" id="addClassModal" tabindex="-1" role="dialog" aria-labelledby="addClassModalName"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addClassModalName">Ajout du classe </h5>
+          <button #closeModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- form add -->
+          <form [formGroup]="classFormGroup">
+
+            <div class="form-group">
+              <label for="levelClass">Niveau</label>
+              <select class="form-control" id="levelClass" formControlName="levelClass" required
+                [(ngModel)]="classModel.levelClass" name="id">
+                <option value="1ére">1ére</option>
+                <option value="2ème">2ème</option>
+                <option value="3ème">3ème</option>
+              </select>
+              <small *ngIf="submitted && classFormGroup.get('levelClass')?.invalid" class="text-danger">levelClass est
+                obligatoire</small>
+            </div>
+
+
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Libelle</label>
+              <input class="form-control" id="LabelClass" required formControlName="labelClass" name="labelClass"
+                type="string" />
+              <small *ngIf="submitted && classFormGroup.get('labelClass')?.invalid" class="text-danger">Libelle est
+                obligatoire</small>
+            </div>
+
+            <div class="form-group">
+              <label for="exampleFormControlInput1">début Année Universitaire</label>
+              <input class="form-control" id="firstSchoolYear" required formControlName="firstSchoolYear"
+                name="firstSchoolYear" type="string" />
+              <small *ngIf="submitted && classFormGroup.get('firstSchoolYear')?.invalid" class="text-danger">début année
+                universitaire est obligatoire</small>
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Fin Année Universitaire</label>
+              <input class="form-control" id="lastSchoolYear" required formControlName="lastSchoolYear"
+                name="lastSchoolYear" type="string" />
+              <small *ngIf="submitted && classFormGroup.get('lastSchoolYear')?.invalid" class="text-danger">Fin année
+                universitaire est obligatoire</small>
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Section</label>
+              <select class="form-control" id="class" formControlName="section" (ngModelChange)="changeSection($event)"
+                required [(ngModel)]="classModel.section.id" name="id">
+                <option *ngFor="let section of sectionList" [value]="section.value">{{section.label}}</option>
+              </select>
+              <small *ngIf="submitted && classFormGroup.get('section')?.invalid" class="text-danger">Section est
+                obligatoire</small>
+            </div>
+
+            <button class="btn btn-primary" (click)="addClass()">Ajouter</button>
+
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal update Class -->
+  <div class="modal fade" id="updateClassModal" tabindex="-1" role="dialog" aria-labelledby="updateClassModalName"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addClassModalName">Modification du classe </h5>
+          <button #closeUpdateModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- form update -->
+          <form [formGroup]="classFormGroup2">
+
+            <div class="form-group">
+              <label for="levelClass">Niveau</label>
+              <select class="form-control" id="levelClass" formControlName="levelClass" required
+                [(ngModel)]="classModel.levelClass" name="id">
+                <option value="1ére">1ére</option>
+                <option value="2ème">2ème</option>
+                <option value="3ème">3ème</option>
+              </select>
+              <small *ngIf="submitted && classFormGroup.get('levelClass')?.invalid" class="text-danger">levelClass est
+                obligatoire</small>
+            </div>
+
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Libelle</label>
+              <input class="form-control" id="LabelClass" required formControlName="labelClass" name="labelClass"
+                type="string" />
+              <small *ngIf="submitted && classFormGroup2.get('labelClass')?.invalid" class="text-danger">Libelle est
+                obligatoire</small>
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Début année universitaire</label>
+              <input class="form-control" id="firstSchoolYear" required formControlName="firstSchoolYear"
+                name="firstSchoolYear" type="string" />
+              <small *ngIf="submitted && classFormGroup2.get('firstSchoolYear')?.invalid" class="text-danger">Début
+                année universitaire est obligatoire</small>
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlInput1">fin année universitaire</label>
+              <input class="form-control" id="lastSchoolYear" required formControlName="lastSchoolYear"
+                name="lastSchoolYear" type="string" />
+              <small *ngIf="submitted && classFormGroup2.get('lastSchoolYear')?.invalid" class="text-danger">fin année
+                universitaire est obligatoire</small>
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Section</label>
+              <select class="form-control" id="class" formControlName="section" (ngModelChange)="changeSection($event)"
+                required [(ngModel)]="classModel.section.id" name="id">
+                <option *ngFor="let section of sectionList" [value]="section.value">{{section.label}}</option>
+              </select>
+              <small *ngIf="submitted && classFormGroup2.get('section')?.invalid" class="text-danger">section est
+                obligatoire</small>
+            </div>
+            <button class="btn btn-primary" (click)="updateClass()">Modifier</button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal View Class -->
+  <div class="modal fade" id="viewClassModal" tabindex="-1" role="dialog" aria-labelledby="viewClassModalName"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="viewClassModalName">Détails du classe</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- form View -->
+          <form>
+
+            <div class="form-group">
+              <label><b>Id: </b></label> {{class!.id}}
+            </div>
+
+            <div class="form-group">
+              <label><b>Niveau: </b></label> {{class!.levelClass}}
+            </div>
+            <div class="form-group">
+              <label><b>Libelle: </b></label> {{class!.labelClass}}
+            </div>
+            <div class="form-group">
+              <label><b>Début année universitaire: </b></label> {{class!.firstSchoolYear}}
+            </div>
+            <div class="form-group">
+              <label><b>Fin année universitaire: </b></label> {{class!.lastSchoolYear}}
+            </div>
+
+            <div class="form-group">
+              <label><b>Section: </b></label> {{class!.section!.label}}
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal subjects -->
+  <div class="modal fade" id="SubjectModal" tabindex="-1" role="dialog" aria-labelledby="addClassModalName"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addClassModalName">liste matiére</h5>
+          <button #closeModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- form subject -->
+          <div class="container">
+
+            <nav class="navbar  navbar-light bg-light" style="display: flex !important;">
+              <div class="container-fluid">
+                <a class="navbar-brand" href="Subjects"><b><i class="si si-layers"></i></b>
+                </a>
+                  <form [formGroup]="subjectFormGroup" style="display: flex !important;">
+                    <div>
+                    <select class="form-control" id="Subject" required formControlName="subject" name="subject"
+                      type="string" style="min-width: 170px;">
+                      <option *ngFor="let sub of subjectList" [value]="sub.id">{{sub.name}}</option>
+                    </select>
+                    <small *ngIf="subjectFormGroup.get('subject')?.invalid && subjectFormGroup.get('subject')?.touched" class="text-danger">Matière est obligatoire</small>
+                  </div>
+                  &nbsp;&nbsp;&nbsp;
+                  <button class="btn btn-primary" style="height: 37px !important;" (click)="AddMatiereToClass()">Ajouter</button>
+
+                
+                </form>
+                </div>
+
+             
+            </nav>
+
+
+            <div class="col-md-12 bg-light">
+              <table class="table " style="background-color: #454d55!important; border: none !important;;">
+
+                <tbody>
+                  <tr *ngFor="let subject of subjectClassList"
+                    style="background-color: #454d55!important; border: none !important;;">
+                    <th>Nom : </th>
+                     <td>{{subject.name}}</td>
+                      <th> Coefficient : </th>
+                      <td>{{subject.coefficient}}<td>
+                      <a type="button" (click)="RemoveMatiereToClass(subject.id)"><i class="si si-trash text-danger"></i></a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- main-content closed -->
