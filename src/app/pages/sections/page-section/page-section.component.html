@@ -1,0 +1,176 @@
+<!-- main-content -->
+<div class="main-content app-content">
+  <div class="container" id="main-container">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="Sections"><b><i class="si si-layers"></i> Liste des filières</b></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addSectionModal"><i
+              class="si si-plus"></i> Ajouter </button>
+        </div>
+      </div>
+      <div class="container-fluid" id="searchbar">
+        <input (ngModelChange)="searchBy(key.value)" ngModel #key="ngModel" type="search" name="key" id="searchName"
+          class="form-control mr-sm-5" placeholder="Rechercher filières..." required>
+      </div>
+    </nav>
+
+
+    <div class="col-md-12">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col" (click)="sort('id')">#&nbsp;<i class="fa fa-sort"></i></th>
+            <th scope="col">Code</th>
+            <th scope="col">Libelle</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let section of sectionList | orderBy: key1: reverse | paginate: {itemsPerPage:3,currentPage:p} , index as i"
+            class="tab-sec">
+            <td>{{section.id}}</td>
+            <td>{{section.code}}</td>
+            <td>{{section.label}}</td>
+
+
+            <td>
+              <a type="button" style="margin-right: 10px;" data-mdb-ripple-color="dark" data-toggle="modal"
+                data-target="#updateSectionModal" (click)="getSection(section.id)"><i
+                  class="text-warning si si-note"></i> </a>
+              <a type="button" style="margin-right: 10px;" (click)="deleteSection(section.id)"><i
+                  class="text-danger si si-trash"></i> </a>
+              <a type="button" data-toggle="modal" data-target="#viewSectionModal" (click)="viewSection(section.id)"><i
+                  class="text-success si si-eye"></i> </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <pagination-controls (pageChange)="p = $event"></pagination-controls>
+    </div>
+  </div>
+
+  <!-- Modal Add Section -->
+  <div class="modal fade" id="addSectionModal" tabindex="-1" role="dialog" aria-labelledby="addSectionModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addSectionModalLabel">Ajout du filière </h5>
+          <button #closeModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- form add -->
+          <form [formGroup]="sectionFormGroup">
+
+            <div class="form-group">
+              <label for="Code">Code</label>
+              <input class="form-control" id="Code" required formControlName="code" name="code" type="string" />
+              <small *ngIf="submitted && sectionFormGroup.get('code')?.invalid" class="text-danger">Code est
+                obligatoire</small>
+            </div>
+
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Libelle</label>
+              <input class="form-control" id="Label" required formControlName="label" name="label" type="string"
+                (ngModelChange)="changeGenericCode($event,'sectionFormGroup')" />
+              <small *ngIf="submitted && sectionFormGroup.get('label')?.invalid" class="text-danger">Libelle est
+                obligatoire</small>
+            </div>
+
+            <button class="btn btn-primary" (click)="addSection()">Ajouter</button>
+
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal update Section -->
+  <div class="modal fade" id="updateSectionModal" tabindex="-1" role="dialog" aria-labelledby="updateSectionModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addSectionModalLabel">Modification du filière </h5>
+          <button #closeUpdateModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- form update -->
+          <form [formGroup]="sectionFormGroup2">
+
+            <div class="form-group">
+              <label for="Code">Code</label>
+              <input class="form-control" id="Code" required formControlName="code" name="code" type="string"
+                [disabled]="isDisabled" />
+              <small *ngIf="submitted && sectionFormGroup2.get('code')?.invalid" class="text-danger">Code est
+                obligatoire</small>
+            </div>
+
+            <div class="form-group">
+              <label for="Label">Libelle</label>
+              <input class="form-control" id="Label" required formControlName="label" name="label" type="string"
+              (ngModelChange)="changeGenericCode($event,'sectionFormGroup2')" />
+              <small *ngIf="submitted && sectionFormGroup2.get('label')?.invalid" class="text-danger">Libelle est
+                obligatoire</small>
+            </div>
+
+            <button class="btn btn-primary" (click)="updateSection()">Modifier</button>
+
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal View Section -->
+  <div class="modal fade" id="viewSectionModal" tabindex="-1" role="dialog" aria-labelledby="viewSectionModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="viewSectionModalLabel">Détails du filière</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- form View -->
+          <form>
+
+            <div class="form-group">
+              <label><b>Id: </b></label> {{section!.id}}
+            </div>
+
+            <div class="form-group">
+              <label><b>Code: </b></label> {{section!.code}}
+            </div>
+
+            <div class="form-group">
+              <label><b>Libelle: </b></label> {{section!.label}}
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- main-content closed -->
