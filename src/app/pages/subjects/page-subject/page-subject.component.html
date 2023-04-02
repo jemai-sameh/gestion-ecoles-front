@@ -1,0 +1,208 @@
+<!-- main-content -->
+<div class="main-content app-content">
+<div class="container" id="main-container">
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+      <a class="navbar-brand" href="Subjects"><b><i class="si si-layers"></i> Liste des matières</b></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <button type="button" class="btn btn-info"   data-toggle="modal" data-target="#addSubjectModal"><i class="si si-plus"></i> Ajouter  </button>
+      </div>
+  </div>
+  <div class="container-fluid" id="searchbar">
+      <input (ngModelChange)="searchBy(key.value)" ngModel #key="ngModel" type="search" name="key" id="searchName" class="form-control mr-sm-5" placeholder="Rechercher matières..." required>
+  </div>
+</nav>
+  
+  
+<div class="col-md-12"> 
+  <table class="table">
+  <thead class="thead-dark">
+      <tr>
+      <th scope="col" (click)="sort('id')">#&nbsp;<i class="fa fa-sort"></i></th>
+      <th scope="col">Nom</th>
+      <th scope="col">Coefficient</th>
+      <th scope="col">Actions</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr *ngFor="let subject of subjectList | orderBy: key1: reverse | paginate: {itemsPerPage:3,currentPage:p} , index as i" class="tab-sub">
+              <td>{{subject.id}}</td>
+              <td>{{subject.name}}</td>
+              <td>{{subject.coefficient}}</td>
+              
+              
+              <td>
+                <a type="button" style="margin-right: 10px;" data-mdb-ripple-color="dark" data-toggle="modal" data-target="#updateSubjectModal" (click)="getSubject(subject.id)"><i class="text-warning si si-note"></i> </a>
+                  <a type="button" style="margin-right: 10px;" (click)="deleteSubject(subject.id)"><i class="text-danger si si-trash"></i> </a>
+                    <a type="button" data-toggle="modal" data-target="#viewSubjectModal"  (click)="viewSubject(subject.id)"><i class="text-success si si-eye"></i> </a>
+              </td>
+      </tr>
+  </tbody>
+  </table>
+  <pagination-controls (pageChange)="p = $event"></pagination-controls>
+  </div>
+</div>
+
+<!-- Modal Add Subject -->
+<div class="modal fade" id="addSubjectModal" tabindex="-1" role="dialog" aria-labelledby="addSubjectModalName" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addSubjectModalName" >Ajout du matière </h5>
+        <button #closeModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+     <!-- form add -->
+     <form [formGroup]="subjectFormGroup" >
+    
+      <div class="form-group">
+        <label for="exampleFormControlInput1">Nom</label>
+        <input
+        class="form-control"
+        id="Name"
+        required
+        formControlName="name"
+        name="name"
+        type="string"
+      />
+      <small *ngIf="submitted && subjectFormGroup.get('name')?.invalid" class="text-danger">Nom est obligatoire</small>
+      </div>
+ 
+      <div class="form-group">
+        <label for="exampleFormControlInput1">Coefficient</label>
+        <input
+        class="form-control"
+        id="Coefficient"
+        required
+        formControlName="coefficient"
+        name="coefficient"
+        type="string"
+      />
+      <small *ngIf="submitted && subjectFormGroup.get('coefficient')?.invalid" class="text-danger">Coefficient est obligatoire</small>
+      </div>
+
+     <!-- <div class="form-group">
+          <label for="exampleFormControlInput1">Niveau</label>
+          <select class="form-control" id="subject"  formControlName="level"  (ngModelChange)="changeLevel($event)" required [(ngModel)]="subjectModel.level.id" name="id" >
+            <option *ngFor="let level of levelList" [value]="level.value">{{level.label}}</option>
+          </select>  
+          <small *ngIf="submitted && subjectFormGroup.get('level')?.invalid" class="text-danger">Niveau est obligatoire</small>
+        </div>
+      -->
+       <button class="btn btn-primary" (click)="addSubject()" >Ajouter</button>
+       
+    </form>
+   
+      </div>
+     
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal update Subject -->
+<div class="modal fade" id="updateSubjectModal" tabindex="-1" role="dialog" aria-labelledby="updateSubjectModalName" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addSubjectModalName" >Modification du matière </h5>
+        <button #closeUpdateModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+     <!-- form update -->
+     <form [formGroup]="subjectFormGroup2" >
+   
+      <div class="form-group">
+        <label for="exampleFormControlInput1">Nom</label>
+        <input
+        class="form-control"
+        id="Name"
+        required
+        formControlName="name"
+        name="name"
+        type="string"
+      />
+      <small *ngIf="submitted && subjectFormGroup2.get('name')?.invalid" class="text-danger">Nom est obligatoire</small>
+      </div>
+ 
+      <div class="form-group">
+        <label for="exampleFormControlInput1">Coefficient</label>
+        <input
+        class="form-control"
+        id="Coefficient"
+        required
+        formControlName="coefficient"
+        name="coefficient"
+        type="string"
+      />
+      <small *ngIf="submitted && subjectFormGroup2.get('coefficient')?.invalid" class="text-danger">Coefficient est obligatoire</small>
+      </div>
+
+     <!-- <div class="form-group">
+          <label for="exampleFormControlInput1">Niveau</label>
+          <select class="form-control" id="subject"  formControlName="level"  (ngModelChange)="changeLevel($event)" required [(ngModel)]="subjectModel.level.id" name="id" >
+            <option *ngFor="let level of levelList" [value]="level.value">{{level.label}}</option>
+          </select>  
+          <small *ngIf="submitted && subjectFormGroup2.get('level')?.invalid" class="text-danger">Niveau est obligatoire</small>
+        </div>
+      -->
+       <button class="btn btn-primary" (click)="updateSubject()" >Modifier</button>
+      
+    </form>
+   
+      </div>
+     
+    </div>
+  </div>
+</div>
+
+<!-- Modal View Subject -->
+<div class="modal fade" id="viewSubjectModal" tabindex="-1" role="dialog" aria-labelledby="viewSubjectModalName"
+aria-hidden="true">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="viewSubjectModalName">Détails du matière</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- form View -->
+      <form >
+   
+        <div class="form-group">
+          <label><b>Id: </b></label> {{subject!.id}}
+        </div>
+
+        <div class="form-group">
+          <label><b>Nom: </b></label> {{subject!.name}}  
+        </div>
+
+        <div class="form-group">
+          <label><b>Coefficient: </b></label> {{subject!.coefficient}}
+        </div>
+
+     <!--   <div class="form-group">
+          <label><b>Niveau: </b></label> {{subject!.level!.label}}  
+        </div>
+      -->
+      
+
+    </form>
+
+    </div>
+
+  </div>
+</div>
+</div>
+</div>
+<!-- main-content closed -->
