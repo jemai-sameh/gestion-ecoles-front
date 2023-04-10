@@ -1,3 +1,5 @@
+import { AuthService } from 'src/app/services/auth/auth-service';
+import { AuthenticationRequest } from 'src/app/models/securite/authenticationRequest';
 import { LabelValue } from './../../../models/labelValue';
 import { SectionService } from 'src/app/services/section/section.service';
 import { Section } from './../../../models/section';
@@ -10,6 +12,7 @@ import { ClassService } from 'src/app/services/classe/class.service';
 import Swal from 'sweetalert2';
 import { Subject } from 'src/app/models/subject';
 import { SubjectService } from 'src/app/services/subject/subject.service';
+import { AuthenticationResponse } from 'src/app/models/securite/authenticationResponse';
 
 @Component({
   selector: 'app-page-class',
@@ -18,30 +21,36 @@ import { SubjectService } from 'src/app/services/subject/subject.service';
 })
 export class PageClassComponent implements OnInit {
   classList: Classe[] = [];
-  subjectList:Subject[] = [];
-  subjectClassList:Subject[] = [];
-
+  subjectList: Subject[] = [];
+  subjectClassList: Subject[] = [];
+  user!: any
   p: number = 1;
   classFormGroup!: FormGroup;
   classFormGroup2!: FormGroup;
-  subjectFormGroup!:FormGroup;
-
+  subjectFormGroup!: FormGroup;
   submitted: boolean = false;
   sectionList: LabelValue[] = []
   classModel: Classe = new Classe();
-  classeSubject:Classe=new Classe();
+  classeSubject: Classe = new Classe();
   class: Classe = new Classe(); // used for view 
-
+  idSchool!: number;
   @ViewChild('closeModalBtn') closeModalBtn!: ElementRef;
   @ViewChild('closeUpdateModalBtn') closeUpdateModalBtn!: ElementRef;
 
   constructor(
     private classService: ClassService,
     private sectionService: SectionService,
-    private subjectService:SubjectService,
-    private toastrService: ToastrService
-  ) { }
+    private subjectService: SubjectService,
+    private toastrService: ToastrService,
+    private authService: AuthService
+  ) {
+    var user1: any = localStorage.getItem('user');
+    this.user = JSON.parse(user1);
+
+  }
   ngOnInit(): void {
+    this.idSchool = (this.authService.getRole() == 'SUPER_ADMIN') ? null : this.user.school.id;
+
 
     this.classFormGroup = new FormGroup({
       'levelClass': new FormControl('', Validators.required),
@@ -61,7 +70,7 @@ export class PageClassComponent implements OnInit {
       'section': new FormControl('', Validators.required),
 
     });
-    this.subjectFormGroup=new FormGroup({
+    this.subjectFormGroup = new FormGroup({
       'subject': new FormControl('', Validators.required),
 
     })
@@ -70,19 +79,18 @@ export class PageClassComponent implements OnInit {
     this.getSections();
     this.getSubjectList();
   }
-  getSubjectList()
-  {
+  getSubjectList() {
     this.subjectService.findAllByClassesIsNull().subscribe(res => {
       this.subjectList = res
-    } , error => {
-        console.error(error)
-    } , ()=> {
+    }, error => {
+      console.error(error)
+    }, () => {
 
     })
   }
 
   getClassList() {
-    this.classService.findAll().subscribe(res => {
+    this.classService.findAll(this.idSchool).subscribe(res => {
       this.classList = res
     }, error => {
       console.error(error)
@@ -141,15 +149,15 @@ export class PageClassComponent implements OnInit {
     section.id = event;
     this.classModel.section = section;
   }
-  AddMatiereToClass(){
+  AddMatiereToClass() {
     this.submitted = true;
     if (this.subjectFormGroup.invalid) {
       return;
     }
-    let idSubject:number=this.subjectFormGroup.value.subject;
+    let idSubject: number = this.subjectFormGroup.value.subject;
     console.log(this.classeSubject)
-    let idClasse=this.classeSubject.id;
-    this.classService.addSubjectToClasse(idSubject,idClasse)
+    let idClasse = this.classeSubject.id;
+    this.classService.addSubjectToClasse(idSubject, idClasse)
       .subscribe({
         next: (res) => {
           this.getSubjectList();
@@ -160,13 +168,13 @@ export class PageClassComponent implements OnInit {
 
         },
       });
-    
+
 
   }
-  RemoveMatiereToClass(idSubject:number){
-    
-    let idClasse=this.classeSubject.id;
-    this.classService.removeSubjectFromClasse(idSubject,idClasse)
+  RemoveMatiereToClass(idSubject: number) {
+
+    let idClasse = this.classeSubject.id;
+    this.classService.removeSubjectFromClasse(idSubject, idClasse)
       .subscribe({
         next: (res) => {
           this.getSubjectList();
@@ -177,7 +185,7 @@ export class PageClassComponent implements OnInit {
 
         },
       });
-    
+
 
   }
   addClass() {
@@ -265,12 +273,20 @@ export class PageClassComponent implements OnInit {
           this.classService.delete(classId)
             .subscribe(res => {
               this.getClassList();
-            })
-          Swal.fire(
-            'Supprimé!',
-            'Votre classe a été supprimée.',
-            'success'
-          )
+              Swal.fire(
+                'Supprimé!',
+                'Votre classe a été supprimée.',
+                'success'
+              )
+            }, error => {
+              Swal.fire(
+                'ERROR!',
+                'Erreur de supprission.',
+                'error'
+              )
+            }
+            )
+
 
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           Swal.fire(
@@ -292,8 +308,8 @@ export class PageClassComponent implements OnInit {
       })
     }
   }
-  listSubjectModal(classe:Classe){
-    this.subjectClassList=classe.subjects;
-    this.classeSubject=classe;
+  listSubjectModal(classe: Classe) {
+    this.subjectClassList = classe.subjects;
+    this.classeSubject = classe;
   }
 }

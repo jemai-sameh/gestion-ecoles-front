@@ -29,7 +29,7 @@ export class RegisterComponent implements OnInit {
   }
   getClasses()
   {
-    this.classService.findAll().subscribe(
+    this.classService.findAllClass().subscribe(
       res => {
         
         this.classList = res

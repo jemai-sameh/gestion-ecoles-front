@@ -1,14 +1,12 @@
-import { Classe } from './../../models/classe';
 import { ToastrService } from 'ngx-toastr';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { School } from 'src/app/models/School';
 import { SchoolsService } from 'src/app/services/schools.service';
 import Swal from 'sweetalert2';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Admin } from 'src/app/models/admin';
 import { AdminService } from 'src/app/services/admin/admin.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-schools',
@@ -21,18 +19,20 @@ export class SchoolsComponent implements OnInit {
   schools: any;
   school: School = new School();
   sch: School[] = [];
-
+  admin!:Admin;
   Scho !: School;
   idschool!: number;
   SchoolDetail !: FormGroup;
   adminList: Admin[] = [];
   AdminsListSchool: Admin[] = [];
   adminFormGroup!: FormGroup;
-  constructor(private router: Router, private toastrService: ToastrService, private formBuilder: FormBuilder, private adminService: AdminService, private SchoolService: SchoolsService) { }
+  constructor(private router: Router, private toastrService: ToastrService, 
+    private formBuilder: FormBuilder, private adminService: AdminService, 
+    private schoolService: SchoolsService) { }
 
   ngOnInit(): void {
     this.reloadData();
-    this.SchoolService.getSchoolList().subscribe(data => this.schools = data);
+    this.schoolService.getSchoolList().subscribe(data => {this.schools = data; console.log(this.schools)});
 
     this.SchoolDetail = this.formBuilder.group({
       id: [''],
@@ -48,12 +48,13 @@ export class SchoolsComponent implements OnInit {
       'firstName': new FormControl('', Validators.required),
       'lastName': new FormControl('', Validators.required),
       'email': new FormControl('', Validators.required),
+      'password': new FormControl('', Validators.required),
       'telephone': new FormControl('', Validators.required)
     });
   }
   // Get
   reloadData() {
-    this.SchoolService.getSchoolList()
+    this.schoolService.getSchoolList()
       .subscribe(res => { this.schools = res }, error => {
         console.error(error)
       }, () => { });
@@ -61,10 +62,18 @@ export class SchoolsComponent implements OnInit {
   }
   viewSchool(id: any) {
     this.Scho = new School();
-    this.SchoolService.getSchool(id).subscribe(res => {
+    this.schoolService.getSchool(id).subscribe(res => {
       this.Scho = res;
     })
   }
+
+  viewAdmin(admin: Admin) {
+    this.admin=admin
+    /*this.adminService.findById(id).subscribe(res => {
+      this.admin = res;
+    })*/
+  }
+
   searchBy(key: string): void {
 
     const res: School[] = [];
@@ -90,7 +99,7 @@ export class SchoolsComponent implements OnInit {
     this.school.id = this.SchoolDetail.value.id;
     this.school.name = this.SchoolDetail.value.name;
     this.school.address = this.SchoolDetail.value.address;
-    this.SchoolService.ajouterSchool(this.school)
+    this.schoolService.ajouterSchool(this.school)
       .subscribe({
         next: (res) => {
           console.log(res);
@@ -113,7 +122,7 @@ export class SchoolsComponent implements OnInit {
     }).then((result) => {
       if (result.value) {
         // alert(id);
-        this.SchoolService.deleteSchool(id)
+        this.schoolService.deleteSchool(id)
           .subscribe(res => {
             this.reloadData();
             Swal.fire(
@@ -136,7 +145,7 @@ export class SchoolsComponent implements OnInit {
   // GetById
   getSchool(id: any) {
     //alert(this.idEncad);
-    this.SchoolService.getSchool(id).subscribe(res => {
+    this.schoolService.getSchool(id).subscribe(res => {
       this.school = res
     }, error => {
       console.error(error)
@@ -146,7 +155,7 @@ export class SchoolsComponent implements OnInit {
   //Update School
   ModifSchool(): void {
     if (!this.submitted) {
-      this.SchoolService.ajouterSchool(this.school)
+      this.schoolService.ajouterSchool(this.school)
         .subscribe({
           next: (res) => {
             console.log(res);
@@ -159,7 +168,16 @@ export class SchoolsComponent implements OnInit {
 
   navigate(): void { }
 
-
+  addSchool(s:School){
+    this.school=s
+  }
+  getAdmin(school:School){
+    this.school=school;
+    this.adminService.findAdminBySchool(school.id).subscribe({
+      next:data=>this.admin=data,
+      error:err=>this.admin=new Admin()
+    })
+  }
   addadmin() {
 
     this.submitted = true;
@@ -173,10 +191,11 @@ export class SchoolsComponent implements OnInit {
     adminModel.lastName = this.adminFormGroup.value.lastName;
     adminModel.email = this.adminFormGroup.value.email;
     adminModel.telephone = this.adminFormGroup.value.telephone;
+    adminModel.password=this.adminFormGroup.value.password
     adminModel.school.id = this.school.id;
 
 
-    this.adminService.save(adminModel)
+    this.adminService.affectAdminToSchool(adminModel)
       .subscribe({
         next: (res) => {
           this.reloadData();

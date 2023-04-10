@@ -2,11 +2,6 @@ import { Admin } from './../../../models/admin';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { Address } from 'src/app/models/address';
-import { Classe } from 'src/app/models/classe';
-import { Student } from 'src/app/models/student';
-import { ClassService } from 'src/app/services/classe/class.service';
-import { StudentService } from 'src/app/services/student/student.service';
 import Swal from 'sweetalert2';
 import { SchoolsService } from 'src/app/services/schools.service';
 import { School } from 'src/app/models/School';
@@ -17,7 +12,7 @@ import { AdminService } from 'src/app/services/admin/admin.service';
   styleUrls: ['./page-admin.component.scss']
 })
 export class PageAdminComponent implements OnInit {
-
+  
   adminList: Admin[] = [];
   p: number = 1;
   adminFormGroup!: FormGroup;

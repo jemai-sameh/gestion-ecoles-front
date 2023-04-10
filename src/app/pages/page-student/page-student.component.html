@@ -9,7 +9,7 @@
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div  class="collapse navbar-collapse" id="navbarSupportedContent">
           <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addStudentModal"><i
               class="si si-plus"></i> Ajouter </button>
         </div>
@@ -60,22 +60,22 @@
 
 
             <td>
-              <a type="button" style="margin-right: 10px;" data-mdb-ripple-color="dark"
+              <a *ngIf="role=='ADMIN'" type="button" style="margin-right: 10px;" data-mdb-ripple-color="dark"
                 data-toggle="modal" data-target="#updateStudentModal" (click)="getStudent(student.id)"><i
                   class="text-warning si si-note"></i> </a>
-                  <a type="button" style="margin-right: 10px;" (click)="deleteStudent(student.id)"><i
+              <a *ngIf="role=='ADMIN'" type="button" style="margin-right: 10px;" (click)="deleteStudent(student.id)"><i
                   class="text-danger si si-trash"></i> </a>
-                  <a type="button" style="margin-right: 10px;" data-toggle="modal"
-                data-target="#viewStudentModal" (click)="viewStudent(student.id)"><i class="text-warning si si-eye"></i> </a>
-            
-                
+              <a type="button" style="margin-right: 10px;" data-toggle="modal" data-target="#viewStudentModal"
+                (click)="viewStudent(student.id)"><i class="text-warning si si-eye"></i> </a>
 
-                <a type="button" style="margin-right: 10px;" (click)="UpdateStatus(student.id,-1)">
-                  <i class="text-danger fas fa-times-circle  me-1"></i> </a>
-               
-                  <a type="button" style="margin-right: 10px;" (click)="UpdateStatus(student.id,1)">
-                  <i class="text-success fa fa-check-square  me-1"></i> </a>
-              </td>
+
+
+              <a type="button" style="margin-right: 10px;" (click)="UpdateStatus(student.id,-1)">
+                <i class="text-danger fas fa-times-circle  me-1"></i> </a>
+
+              <a type="button" style="margin-right: 10px;" (click)="UpdateStatus(student.id,1)">
+                <i class="text-success fa fa-check-square  me-1"></i> </a>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -118,20 +118,60 @@
                   obligatoire</small>
               </div>
               <div class="col">
-                <label for="exampleFormControlInput1">Adresse 1</label>
-                <input class="form-control" id="Address1" required formControlName="address1" name="address1"
-                  type="string" [(ngModel)]="adr.address1" />
-                <small *ngIf="submitted && studentFormGroup.get('address1')?.invalid" class="text-danger">Adresse 1 est
-                  obligatoire</small>
-              </div>
-            </div>
-
-            <div class="form-group row mb-3">
-              <div class="col">
                 <label for="exampleFormControlInput1">Prenom</label>
                 <input class="form-control" id="FirstName" required formControlName="firstName" name="firstName"
                   type="string" />
                 <small *ngIf="submitted && studentFormGroup.get('firstName')?.invalid" class="text-danger">Prenom est
+                  obligatoire</small>
+              </div>
+             
+            </div>
+
+           
+
+            <div class="form-group row mb-3">
+              <div class="col">
+                <label for="exampleFormControlInput1">E-mail</label>
+                <input class="form-control" id="Email" required formControlName="email" name="email" type="string" />
+                <small *ngIf="submitted && studentFormGroup.get('email')?.invalid" class="text-danger">E-mail est
+                  obligatoire</small>
+              </div>
+              <div class="col">
+                <label for="exampleFormControlInput1">Mot de passe</label>
+                <input class="form-control" id="password" required formControlName="password" name="password"
+                  type="password" />
+                <small *ngIf="submitted && studentFormGroup.get('password')?.invalid" class="text-danger">password est
+                  obligatoire</small>
+              </div>
+
+            </div>
+
+
+
+           
+            <div class="form-group row mb-3">
+              <div class="col">
+                <label for="exampleFormControlInput1">N° Tel</label>
+                <input class="form-control" id="telephone" required formControlName="telephone" name="telephone"
+                  type="string" />
+                <small *ngIf="submitted && studentFormGroup.get('telephone')?.invalid" class="text-danger">N° Tel est
+                  obligatoire</small>
+              </div>
+              <div class="col">
+                <label for="exampleFormControlInput1">Date de naissance</label>
+                <input class="form-control" id="DateOfBirth" required formControlName="dateOfBirth" name="dateOfBirth"
+                  type="date" #dateOfBirth value="{{student.dateOfBirth}} | date:'dd-MM-yyyy'" />
+                <small *ngIf="submitted && studentFormGroup.get('dateOfBirth')?.invalid" class="text-danger">Date de
+                  naissane est obligatoire</small>
+              </div>
+             
+            </div>
+            <div class="form-group row mb-3">
+              <div class="col">
+                <label for="exampleFormControlInput1">Adresse 1</label>
+                <input class="form-control" id="Address1" required formControlName="address1" name="address1"
+                  type="string" [(ngModel)]="adr.address1" />
+                <small *ngIf="submitted && studentFormGroup.get('address1')?.invalid" class="text-danger">Adresse 1 est
                   obligatoire</small>
               </div>
               <div class="col">
@@ -145,12 +185,14 @@
 
             <div class="form-group row mb-3">
               <div class="col">
-                <label for="exampleFormControlInput1">E-mail</label>
-                <input class="form-control" id="Email" required formControlName="email" name="email" type="string" />
-                <small *ngIf="submitted && studentFormGroup.get('email')?.invalid" class="text-danger">E-mail est
-                  obligatoire</small>
+                <label for="exampleFormControlInput1">Code Postal</label>
+                <input class="form-control" id="ZipCode" required formControlName="zipCode" name="zipCode" type="string"
+                  [(ngModel)]="adr.zipCode" />
+                <small *ngIf="submitted && studentFormGroup.get('zipCode')?.invalid" class="text-danger">Code Postale
+                  est obligatoire</small>
               </div>
               <div class="col">
+            
                 <label for="exampleFormControlInput1">Ville</label>
                 <input class="form-control" id="City" required formControlName="city" name="city" type="string"
                   [(ngModel)]="adr.city" />
@@ -159,31 +201,10 @@
               </div>
             </div>
 
-            <div class="form-group row mb-3">
-              <div class="col">
-                <label for="exampleFormControlInput1">N° Tel</label>
-                <input class="form-control" id="telephone" required formControlName="telephone" name="telephone"
-                  type="string" />
-                <small *ngIf="submitted && studentFormGroup.get('telephone')?.invalid" class="text-danger">N° Tel est
-                  obligatoire</small>
-              </div>
-              <div class="col">
-                <label for="exampleFormControlInput1">Code Postal</label>
-                <input class="form-control" id="ZipCode" required formControlName="zipCode" name="zipCode" type="string"
-                  [(ngModel)]="adr.zipCode" />
-                <small *ngIf="submitted && studentFormGroup.get('zipCode')?.invalid" class="text-danger">Code Postale
-                  est obligatoire</small>
-              </div>
-            </div>
+            
 
             <div class="form-group row mb-3">
-              <div class="col">
-                <label for="exampleFormControlInput1">Date de naissance</label>
-                <input class="form-control" id="DateOfBirth" required formControlName="dateOfBirth" name="dateOfBirth"
-                  type="date" #dateOfBirth value="{{student.dateOfBirth}} | date:'dd-MM-yyyy'" />
-                <small *ngIf="submitted && studentFormGroup.get('dateOfBirth')?.invalid" class="text-danger">Date de
-                  naissane est obligatoire</small>
-              </div>
+              
               <div class="col">
                 <label for="exampleFormControlInput1">Pays</label>
                 <input class="form-control" id="Country" required formControlName="country" name="country" type="string"
@@ -203,7 +224,7 @@
                   class="text-danger">Classe est obligatoire</small>
               </div>
             </div>
-            <div class="form-group row mb-3">
+            <!--<div class="form-group row mb-3">
               <div class="col">
                 <label for="exampleFormControlInput1">School</label>
                 <select class="form-control" id="school" required formControlName="school" name="school" type="string">
@@ -212,7 +233,7 @@
                 <small *ngIf="studentFormGroup.get('school')?.invalid && studentFormGroup.get('school')?.touched"
                   class="text-danger">school est obligatoire</small>
               </div>
-            </div>
+            </div>-->
 
             <button class="btn btn-primary" (click)="addStudent()">Ajouter</button>
 
@@ -259,30 +280,16 @@
                   obligatoire</small>
               </div>
               <div class="col">
-                <label for="exampleFormControlInput1">Adresse 1</label>
-                <input class="form-control" id="Address1" required formControlName="address1" name="address1"
-                  type="string" [(ngModel)]="adr.address1" />
-                <small *ngIf="submitted && studentFormGroup2.get('address1')?.invalid" class="text-danger">Adresse 1 est
-                  obligatoire</small>
-              </div>
-            </div>
-
-            <div class="form-group row mb-3">
-              <div class="col">
                 <label for="exampleFormControlInput1">Prenom</label>
                 <input class="form-control" id="FirstName" required formControlName="firstName" name="firstName"
                   type="string" />
                 <small *ngIf="submitted && studentFormGroup2.get('firstName')?.invalid" class="text-danger">Prenom est
                   obligatoire</small>
               </div>
-              <div class="col">
-                <label for="exampleFormControlInput1">Adresse 2</label>
-                <input class="form-control" id="Address2" required formControlName="address2" name="address2"
-                  type="string" [(ngModel)]="adr.address2" />
-                <small *ngIf="submitted && studentFormGroup2.get('address2')?.invalid" class="text-danger">Adresse 2 est
-                  obligatoire</small>
-              </div>
+              
             </div>
+
+           
 
             <div class="form-group row mb-3">
               <div class="col">
@@ -292,10 +299,9 @@
                   obligatoire</small>
               </div>
               <div class="col">
-                <label for="exampleFormControlInput1">Ville</label>
-                <input class="form-control" id="City" required formControlName="city" name="city" type="string"
-                  [(ngModel)]="adr.city" />
-                <small *ngIf="submitted && studentFormGroup2.get('city')?.invalid" class="text-danger">Ville est
+                <label for="password">Mot de passe</label>
+                <input class="form-control" id="password" required formControlName="password" name="password" type="password" />
+                <small *ngIf="submitted && studentFormGroup2.get('password')?.invalid" class="text-danger">Mot de passe est
                   obligatoire</small>
               </div>
             </div>
@@ -309,21 +315,45 @@
                   obligatoire</small>
               </div>
               <div class="col">
-                <label for="exampleFormControlInput1">Code Postal</label>
-                <input class="form-control" id="ZipCode" required formControlName="zipCode" name="zipCode" type="string"
-                  [(ngModel)]="adr.zipCode" />
-                <small *ngIf="submitted && studentFormGroup2.get('zipCode')?.invalid" class="text-danger">Code Postale
-                  est obligatoire</small>
-              </div>
-            </div>
-
-            <div class="form-group row mb-3">
-              <div class="col">
                 <label for="exampleFormControlInput1">Date de naissance</label>
                 <input class="form-control" id="DateOfBirth" required formControlName="dateOfBirth" name="dateOfBirth"
                   type="date" #dateOfBirth value="{{student.dateOfBirth}} | date:'dd-MM-yyyy'" />
                 <small *ngIf="submitted && studentFormGroup2.get('dateOfBirth')?.invalid" class="text-danger">Date de
                   naissance est obligatoire</small>
+              </div>
+              
+            </div>
+            <div class="form-group row mb-3">
+              <div class="col">
+                <label for="exampleFormControlInput1">Adresse 1</label>
+                <input class="form-control" id="Address1" required formControlName="address1" name="address1"
+                  type="string" [(ngModel)]="adr.address1" />
+                <small *ngIf="submitted && studentFormGroup2.get('address1')?.invalid" class="text-danger">Adresse 1 est
+                  obligatoire</small>
+              </div>
+              <div class="col">
+                <label for="exampleFormControlInput1">Adresse 2</label>
+                <input class="form-control" id="Address2" required formControlName="address2" name="address2"
+                  type="string" [(ngModel)]="adr.address2" />
+                <small *ngIf="submitted && studentFormGroup2.get('address2')?.invalid" class="text-danger">Adresse 2 est
+                  obligatoire</small>
+              </div>
+            </div>
+
+            <div class="form-group row mb-3">
+              <div class="col">
+                <label for="exampleFormControlInput1">Ville</label>
+                <input class="form-control" id="City" required formControlName="city" name="city" type="string"
+                  [(ngModel)]="adr.city" />
+                <small *ngIf="submitted && studentFormGroup2.get('city')?.invalid" class="text-danger">Ville est
+                  obligatoire</small>
+              </div>
+              <div class="col">
+                <label for="exampleFormControlInput1">Code Postal</label>
+                <input class="form-control" id="ZipCode" required formControlName="zipCode" name="zipCode" type="string"
+                  [(ngModel)]="adr.zipCode" />
+                <small *ngIf="submitted && studentFormGroup2.get('zipCode')?.invalid" class="text-danger">Code Postale
+                  est obligatoire</small>
               </div>
               <div class="col">
                 <label for="exampleFormControlInput1">Pays</label>
@@ -345,7 +375,7 @@
                   class="text-danger">Classe est obligatoire</small>
               </div>
             </div>
-            <div class="form-group row mb-3">
+            <!--<div class="form-group row mb-3">
               <div class="col">
                 <label for="exampleFormControlInput1">Ecole</label>
                 <select class="form-control" id="school" formControlName="school" (ngModelChange)="changeSchool($event)"
@@ -355,7 +385,7 @@
                 <small *ngIf="studentFormGroup2.get('school')?.invalid && studentFormGroup.get('school')?.touched"
                   class="text-danger">school est obligatoire</small>
               </div>
-            </div>
+            </div>-->
 
             <button class="btn btn-primary" (click)="updateStudent()">Modifier</button>
 
@@ -411,7 +441,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label><b>Classe: </b></label> {{student!.classe!.levelClass}}  {{student!.classe!.labelClass}}
+                  <label><b>Classe: </b></label> {{student!.classe!.levelClass}} {{student!.classe!.labelClass}}
                 </div>
                 <div class="form-group">
                   <label><b>Ecole: </b></label> {{student!.school!.name}}

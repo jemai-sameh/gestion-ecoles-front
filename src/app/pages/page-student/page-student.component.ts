@@ -9,6 +9,7 @@ import { ClassService } from 'src/app/services/classe/class.service';
 import { StudentService } from 'src/app/services/student/student.service';
 import Swal from 'sweetalert2';
 import { SchoolsService } from 'src/app/services/schools.service';
+import { AuthService } from 'src/app/services/auth/auth-service';
 //import * as alertifyjs from 'alertifyjs';
 
 @Component({
@@ -32,23 +33,34 @@ export class PageStudentComponent implements OnInit {
   adr1: Address[] = [];
   file!: File;
   imgUrl: string | ArrayBuffer = 'assets/img/avatar.png'
-
+  idSchool!: number;
   @ViewChild('closeModalBtn') closeModalBtn!: ElementRef;
   @ViewChild('closeUpdateModalBtn') closeUpdateModalBtn!: ElementRef;
-
+  user!:any
+  role!:any
   constructor(
     private studentService: StudentService,
     private classService: ClassService,
     private schoolService: SchoolsService,
-    private toastrService: ToastrService
-  ) { }
+    private toastrService: ToastrService,
+    private authService: AuthService
+  ) {
+    var user1: any = localStorage.getItem('user');
+    this.user = JSON.parse(user1);
+
+  }
   ngOnInit(): void {
+    this.role=this.authService.getRole()
+
+    this.idSchool = (this.role== 'SUPER_ADMIN') ? null : this.user?.school?.id;
+
 
     this.studentFormGroup = new FormGroup({
       'firstName': new FormControl('', Validators.required),
       'lastName': new FormControl('', Validators.required),
       'dateOfBirth': new FormControl('', Validators.required),
       'email': new FormControl('', Validators.required),
+      'password': new FormControl('', Validators.required),
       'telephone': new FormControl('', Validators.required),
       'image': new FormControl('', Validators.required),
       'address1': new FormControl('', Validators.required),
@@ -57,7 +69,7 @@ export class PageStudentComponent implements OnInit {
       'zipCode': new FormControl('', Validators.required),
       'country': new FormControl('', Validators.required),
       'classe': new FormControl('', Validators.required),
-      'school': new FormControl('', Validators.required)
+      //'school': new FormControl('', Validators.required)
 
     });
 
@@ -66,6 +78,7 @@ export class PageStudentComponent implements OnInit {
       'lastName': new FormControl('', Validators.required),
       'dateOfBirth': new FormControl('', Validators.required),
       'email': new FormControl('', Validators.required),
+      'password': new FormControl('', Validators.required),
       'telephone': new FormControl('', Validators.required),
       'image': new FormControl('', Validators.required),
       'address1': new FormControl('', Validators.required),
@@ -74,7 +87,7 @@ export class PageStudentComponent implements OnInit {
       'zipCode': new FormControl('', Validators.required),
       'country': new FormControl('', Validators.required),
       'classe': new FormControl('', Validators.required),
-      'school': new FormControl('', Validators.required)
+      //'school': new FormControl('', Validators.required)
 
 
     });
@@ -86,7 +99,7 @@ export class PageStudentComponent implements OnInit {
   }
 
   getStudentList() {
-    this.studentService.getStudentList().subscribe(res => {
+    this.studentService.getStudentList(this.idSchool).subscribe(res => {
       this.studentList = res
     }, error => {
       console.error(error)
@@ -96,7 +109,7 @@ export class PageStudentComponent implements OnInit {
   }
 
   getClasses() {
-    this.classService.findAll().subscribe(
+    this.classService.findAll(this.idSchool).subscribe(
       res => {
 
         this.classList = res
@@ -187,8 +200,7 @@ export class PageStudentComponent implements OnInit {
     this.studentModel.telephone = this.studentFormGroup.value.telephone;
     this.studentModel.image = this.studentFormGroup.value.image;
     this.studentModel.classe.id = this.studentFormGroup.value.classe;
-    this.studentModel.school.id = this.studentFormGroup.value.school
-
+    this.studentModel.school.id = this.idSchool
 
     this.studentService.saveStudent(this.studentModel)
       .subscribe({
@@ -347,14 +359,14 @@ export class PageStudentComponent implements OnInit {
     event.target.src = "assets/img/avatar.png";
   }
 
-  UpdateStatus(id:number, status:number) {
+  UpdateStatus(id: number, status: number) {
     this.studentService
-     .EnabledOrDisabledStatus(id, status)
-     .subscribe((response) => {
-       this.getStudentList();
-       this.toastrService.success('Success!', status == 1
-       ? "Etudiant(e) a était mise a jour a l'etat accepter"
-       : "Etudiant(e) a était mise a jour a l'etat refuser",);
-     });
- }
+      .EnabledOrDisabledStatus(id, status)
+      .subscribe((response) => {
+        this.getStudentList();
+        this.toastrService.success('Success!', status == 1
+          ? "Etudiant(e) a était mise a jour a l'etat accepter"
+          : "Etudiant(e) a était mise a jour a l'etat refuser",);
+      });
+  }
 }

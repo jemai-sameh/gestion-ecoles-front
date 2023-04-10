@@ -241,7 +241,8 @@
                                                                                 <option value=-1 disabled checked>
                                                                                     Sélectionner votre classe</option>
                                                                                 <option *ngFor="let cls of classList"
-                                                                                    [value]="cls.id">{{cls.levelClass}} {{cls.labelClass}}
+                                                                                    [value]="cls.id">{{cls.levelClass}}
+                                                                                    {{cls.labelClass}}
                                                                                 </option>
                                                                             </select>
                                                                         </div>

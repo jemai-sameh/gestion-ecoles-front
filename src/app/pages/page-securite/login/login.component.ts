@@ -12,17 +12,21 @@ export class LoginComponent implements OnInit {
   showPassword!: boolean;
 
   authenticationRequest :AuthenticationRequest=new AuthenticationRequest();
-errorMsg : string=""
+  errorMsg : string=""
   constructor(private authService : AuthService, private router: Router) { }
 
   ngOnInit(): void {
     localStorage.removeItem("accesstoken")
+    localStorage.removeItem("idSchool")
+    localStorage.removeItem("mailUser")
+
   }
   login(){
     this.authService.login(this.authenticationRequest).subscribe(
       ress =>{
         this.authService.setUserToken(ress)
-        
+
+
         this.router.navigate(["/acc/home"])
 
       },error =>{

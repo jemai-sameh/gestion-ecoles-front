@@ -9,19 +9,28 @@
       <!-- Messages Dropdown Menu -->
       
 	  <li class="dropdown main-profile-menu nav nav-item nav-link ps-lg-2">
-		<a class="new nav-link profile-user d-flex" href="#" data-bs-toggle="dropdown"><img alt="" src="assets/img/faces/2.jpg" class=""></a>
+		<a class="new nav-link profile-user d-flex" href="#" data-bs-toggle="dropdown">
+			<img *ngIf="image==null" alt="" src="assets\img\avatar.png" class="">
+						<img *ngIf="image!=null" alt="" [src]="image" class="">
+
+		
+		</a>
 		<div class="dropdown-menu">
 			<div class="menu-header-content p-3 border-bottom">
 				
 				<div class="d-flex wd-100p">
-					<div class="main-img-user"><img alt="" src="assets/img/faces/2.jpg" class=""></div>
+					<div class="main-img-user">
+						<img *ngIf="image==null" alt="" src="assets\img\avatar.png" class="">
+						<img *ngIf="image!=null" alt="" [src]="image" class="">
+
+					</div>
 					<div class="ms-3 my-auto">
-						<h6 class="tx-15 font-weight-semibold mb-0">Teri Dactyl</h6><span class="dropdown-title-text subtext op-6  tx-12">Premium Member</span>
+						<h6 class="tx-15 font-weight-semibold mb-0">{{name}}</h6>
 					</div>
 				</div>
 			</div>
 			<a class="dropdown-item" href="acc/home"><i class="far fa-user-circle"></i> Profil</a>
-			<a class="dropdown-item" href="mail-settings.html"><i class="far fa-sun"></i> Paramètres</a>
+			<!--<a class="dropdown-item" href="mail-settings.html"><i class="far fa-sun"></i> Paramètres</a>-->
 			<a class="dropdown-item" href="login" (click)="relogin()"><i class="far fa-arrow-alt-circle-left"></i> Déconnexion</a>
 		</div>
 	</li>

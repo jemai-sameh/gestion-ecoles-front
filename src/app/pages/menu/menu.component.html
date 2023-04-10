@@ -24,7 +24,7 @@
               </p>
             </a>
           </li>
-          <li class="nav-item nav-category">
+          <li *ngIf="role=='SUPER_ADMIN'" class="nav-item nav-category">
             <a routerLink="admins" class="nav-link">
               <i class="nav-icon fas fa-school"></i>
               <p>
@@ -32,7 +32,7 @@
               </p>
             </a>
           </li>
-          <li class="nav-item nav-category">
+          <li *ngIf="role=='SUPER_ADMIN'" class="nav-item nav-category">
             <a routerLink="schools" class="nav-link">
               <i class="nav-icon fas fa-school"></i>
               <p>
@@ -40,7 +40,7 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
+          <li *ngIf="role=='ADMIN' " class="nav-item">
             <a routerLink="Sections" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
@@ -48,7 +48,7 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
+          <li *ngIf="role=='ADMIN' || role=='TEACHER' " class="nav-item">
             <a routerLink="Subjects" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
@@ -56,7 +56,7 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
+          <li *ngIf="role=='ADMIN'" class="nav-item">
             <a routerLink="classes" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
@@ -64,7 +64,7 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
+          <li *ngIf="role=='ADMIN' || role=='TEACHER' || role=='STUDENT'" class="nav-item">
             <a routerLink="plannings" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
@@ -72,7 +72,7 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
+          <li *ngIf="role=='ADMIN' || role=='SUPER_ADMIN'" class="nav-item">
             <a routerLink="teachers" class="nav-link">
               <i class="nav-icon fas fa-chalkboard-teacher"></i>
               <p>
@@ -80,7 +80,7 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
+          <li *ngIf="role=='ADMIN' || role=='SUPER_ADMIN' " class="nav-item">
             <a routerLink="students" class="nav-link">
               <i class="nav-icon fas fa-book-reader"></i>
               <p>
@@ -88,7 +88,7 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
+          <li *ngIf="role=='ADMIN' || role=='TEACHER' || role=='STUDENT'" class="nav-item">
             <a routerLink="Classroom" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
@@ -96,7 +96,7 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
+          <li *ngIf="role=='ADMIN' || role=='TEACHER' || role=='STUDENT'" class="nav-item">
             <a routerLink="absences" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>

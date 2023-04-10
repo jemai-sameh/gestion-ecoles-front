@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 
 import { ClassRoom } from 'src/app/models/classroom';
 import { School } from 'src/app/models/School';
+import { AuthService } from 'src/app/services/auth/auth-service';
 import { ClassroomService } from 'src/app/services/classroom.service';
 import { SchoolsService } from 'src/app/services/schools.service';
 import Swal from 'sweetalert2';
@@ -18,24 +19,34 @@ import Swal from 'sweetalert2';
 export class ClassroomsComponent implements OnInit {
   id: any
   submitted = false;
+  p: number = 1;
+
   // classrooms: any;
   classroom: ClassRoom = new ClassRoom();
   classRoomList: ClassRoom[] = [];
   schoolList:School[]=[];
-
+  user!:any;
   classroomes !: ClassRoom;
   ClassRoomDetail !: FormGroup;
   schools: School[] = [];
+  idSchool!:number;
+  constructor(private router: Router, private formBuilder: FormBuilder, private schoolsService:SchoolsService,private classroomService: ClassroomService,
+    private authService:AuthService
+    ) {
+var user1:any = localStorage.getItem('user');    
+this.user=JSON.parse(user1);
+      
+     }
+ngOnInit(): void {
+this.idSchool=(this.authService.getRole()=='SUPER_ADMIN')? null :this.user.school.id;
 
-  constructor(private router: Router, private formBuilder: FormBuilder, private schoolsService:SchoolsService,private classroomService: ClassroomService) { }
-  ngOnInit(): void {
     this.reloadData();
     this.getSchools();
    // this.classroomService.getClassroomList().subscribe(data => this.classRoomList = data);
 
 
     this.ClassRoomDetail = new FormGroup({
-      'school': new FormControl('', Validators.required),
+      //'school': new FormControl('', Validators.required),
       'classRoomNumber': new FormControl('', Validators.required),
       'bloc': new FormControl('', Validators.required)
     });
@@ -43,7 +54,7 @@ export class ClassroomsComponent implements OnInit {
 
 
   reloadData() {
-    this.classroomService.getClassroomList()
+    this.classroomService.getClassroomList(this.idSchool)
       .subscribe(res => { this.classRoomList = res }, error => {
         console.error(error)
       }, () => { });
@@ -63,6 +74,7 @@ export class ClassroomsComponent implements OnInit {
     this.classroom.id = this.ClassRoomDetail.value.id;
     this.classroom.classRoomNumber = this.ClassRoomDetail.value.classRoomNumber;
     this.classroom.bloc = this.ClassRoomDetail.value.bloc;
+    this.classroom.school.id=this.idSchool
     this.classroomService.addClassRoom(this.classroom)
       .subscribe({
         next: (res) => {
@@ -173,4 +185,12 @@ export class ClassroomsComponent implements OnInit {
     this.classroom.school = school;
     console.log(this.classroom.school.id)
   }
+
+  key1: string = 'id';
+  reverse: boolean = false;
+  sort(key1: any) {
+    this.key1 = key1;
+    this.reverse = !this.reverse;
+  }
+
 }

@@ -1,3 +1,4 @@
+import { AuthService } from 'src/app/services/auth/auth-service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MenuComponent implements OnInit {
 
-  constructor() { }
+  role!:string
+  constructor(private authservice:AuthService) { }
 
   ngOnInit(): void {
+    this.role=this.authservice.getRole()
   }
 
 }

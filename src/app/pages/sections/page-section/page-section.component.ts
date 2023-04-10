@@ -1,3 +1,5 @@
+import { AuthService } from 'src/app/services/auth/auth-service';
+import { School } from './../../../models/School';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -11,7 +13,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./page-section.component.scss']
 })
 export class PageSectionComponent implements OnInit {
-
+  user!:any
   sectionList:Section[] = [];
   isDisabled: boolean = true;
   p: number = 1;
@@ -22,16 +24,22 @@ export class PageSectionComponent implements OnInit {
   section:Section = new Section() ; // used for view 
 
   letters!:string;
-
+  idSchool!:number;
 
   @ViewChild('closeModalBtn') closeModalBtn!: ElementRef;
   @ViewChild('closeUpdateModalBtn') closeUpdateModalBtn!: ElementRef;
 
   constructor(
               private sectionService:SectionService,
-              private toastrService: ToastrService
-              ) { }
+              private toastrService: ToastrService,
+    private authService: AuthService
+  ) {
+    var user1: any = localStorage.getItem('user');
+    this.user = JSON.parse(user1);
+
+  }
   ngOnInit(): void {
+    this.idSchool = (this.authService.getRole() == 'SUPER_ADMIN') ? null : this.user.school.id;
 
     this.sectionFormGroup = new FormGroup({
       'code' : new FormControl({value: '', disabled: true}, Validators.required),
@@ -51,7 +59,7 @@ export class PageSectionComponent implements OnInit {
 
   getSectionList()
   {
-    this.sectionService.getSectionList().subscribe(res => {
+    this.sectionService.getSectionList(this.idSchool).subscribe(res => {
       this.sectionList = res
     } , error => {
         console.error(error)
@@ -97,6 +105,7 @@ export class PageSectionComponent implements OnInit {
     }
       this.sectionModel.code = this.sectionFormGroup.get("code")?.value;
       this.sectionModel.label = this.sectionFormGroup.value.label
+      this.sectionModel.school.id=this.idSchool
 
       this.sectionService.saveSection(this.sectionModel)
         .subscribe({
@@ -140,6 +149,7 @@ export class PageSectionComponent implements OnInit {
     }
     this.sectionModel.code = this.sectionFormGroup2.get("code")?.value;
     this.sectionModel.label = this.sectionFormGroup2.value.label;
+    this.sectionModel.school.id=this.idSchool
 
     
     this.sectionService.saveSection(this.sectionModel)

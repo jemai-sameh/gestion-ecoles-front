@@ -1,175 +1,177 @@
 <!-- main-content -->
 <div class="main-content app-content">
-    <div class="container" id="main-container">
-    
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container" id="main-container">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
-          <a class="navbar-brand" href="absences"><b><i class="si si-layers"></i> Liste des absences</b></a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand" href="absences"><b><i class="si si-layers"></i> Liste des absences</b></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <button type="button" class="btn btn-info"   data-toggle="modal" data-target="#addAbsenceModal"><i class="si si-plus"></i> Ajouter  </button>
-          </div>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addAbsenceModal"><i
+              class="si si-plus"></i> Ajouter </button>
+        </div>
       </div>
       <div class="container-fluid" id="searchbar">
-          <input (ngModelChange)="searchBy(key.value)" ngModel #key="ngModel" type="search" name="key" id="searchName" class="form-control mr-sm-5" placeholder="Rechercher absences..." required>
+        <input (ngModelChange)="searchBy(key.value)" ngModel #key="ngModel" type="search" name="key" id="searchName"
+          class="form-control mr-sm-5" placeholder="Rechercher absences..." required>
       </div>
     </nav>
-      
-      
-    <div class="col-md-12"> 
+
+
+    <div class="col-md-12">
       <table class="table">
-      <thead class="thead-dark">
+        <thead class="thead-dark">
           <tr>
-          <th scope="col" (click)="sort('id')">#&nbsp;<i class="fa fa-sort"></i></th>
-          <th scope="col">Date Absence</th>
-          <th scope="col">Type</th>
-          <th scope="col">Elève</th>
-          <th scope="col">Actions</th>
+            <th scope="col" (click)="sort('id')">#&nbsp;<i class="fa fa-sort"></i></th>
+            <th scope="col">Date Absence</th>
+            <th scope="col">Type</th>
+            <th scope="col">Elève</th>
+            <th scope="col">Actions</th>
           </tr>
-      </thead>
-      <tbody>
-          <tr *ngFor="let absence of absenceList | orderBy: key1: reverse | paginate: {itemsPerPage:3,currentPage:p} , index as i" class="tab-sub">
-                  <td>{{absence.id}}</td>
-                  <td>{{absence.dateAbsence| date:"dd-MM-yyyy"}}</td>
-                  <td>{{absence.type}}</td>
-                  <td>{{absence.student.lastName}} {{absence.student.firstName}}</td>
-                  
-                  
-                  <td>
-                    <a type="button" style="margin-right: 10px;" data-mdb-ripple-color="dark" data-toggle="modal" data-target="#updateAbsenceModal" (click)="getAbsence(absence.id)"><i class="text-warning si si-note"></i> </a>
-                      <a type="button" style="margin-right: 10px;"  (click)="deleteAbsence(absence.id)"><i class="text-danger si si-trash"></i> </a>
-                        <a type="button" style="margin-right: 10px;" data-toggle="modal" data-target="#viewAbsenceModal"  (click)="viewAbsence(absence.id)"><i class="text-success si si-eye"></i> </a>
-                  </td>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let absence of absenceList | orderBy: key1: reverse | paginate: {itemsPerPage:3,currentPage:p} , index as i"
+            class="tab-sub">
+            <td>{{absence.id}}</td>
+            <td>{{absence.dateAbsence| date:"dd-MM-yyyy"}}</td>
+            <td>{{absence.type}}</td>
+            <td>{{absence.student.lastName}} {{absence.student.firstName}}</td>
+
+
+            <td>
+              <a type="button" style="margin-right: 10px;" data-mdb-ripple-color="dark" data-toggle="modal"
+                data-target="#updateAbsenceModal" (click)="getAbsence(absence.id)"><i
+                  class="text-warning si si-note"></i> </a>
+              <a type="button" style="margin-right: 10px;" (click)="deleteAbsence(absence.id)"><i
+                  class="text-danger si si-trash"></i> </a>
+              <a type="button" style="margin-right: 10px;" data-toggle="modal" data-target="#viewAbsenceModal"
+                (click)="viewAbsence(absence.id)"><i class="text-success si si-eye"></i> </a>
+            </td>
           </tr>
-      </tbody>
+        </tbody>
       </table>
       <pagination-controls (pageChange)="p = $event"></pagination-controls>
-      </div>
     </div>
-    
-    <!-- Modal Add Absence -->
-    <div class="modal fade" id="addAbsenceModal" tabindex="-1" role="dialog" aria-labelledby="addAbsenceModalName" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="addAbsenceModalName" >Ajout de l'absence </h5>
-            <button #closeModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-         <!-- form add -->
-         <form [formGroup]="absenceFormGroup" >
-        
-          <div class="form-group">
-            <label for="exampleFormControlInput1">Date</label>
-            <input
-            class="form-control"
-            id="DateAbsence"
-            required
-            formControlName="dateAbsence"
-            name="dateAbsence"
-            type="date"
-            #dateAbsence value="{{absence.dateAbsence}} | date:'dd-MM-yyyy'" 
-          />
-          <small *ngIf="submitted && absenceFormGroup.get('dateAbsence')?.invalid" class="text-danger">Date est obligatoire</small>
-          </div>
-     
-          <div class="form-group">
-            <label for="exampleFormControlInput1">Type</label>
-            <input
-            class="form-control"
-            id="Type"
-            required
-            formControlName="type"
-            name="type"
-            type="string"
-          />
-          <small *ngIf="submitted && absenceFormGroup.get('type')?.invalid" class="text-danger">Type est obligatoire</small>
-          </div>
-    
-          <div class="form-group">
-              <label for="exampleFormControlInput1">Elève</label>
-              <select class="form-control" id="absence"  formControlName="student"  (ngModelChange)="changeStudent($event)" required [(ngModel)]="absenceModel.student.id" name="id" >
-                <option *ngFor="let student of studentList" [value]="student.value">{{student.lastName}} {{student.firstName}}</option>
-              </select>  
-              <small *ngIf="submitted && absenceFormGroup.get('student')?.invalid" class="text-danger">Elève est obligatoire</small>
-            </div>
-    
-           <button class="btn btn-primary" (click)="addAbsence()" >Ajouter</button>
-           
-        </form>
-       
-          </div>
-         
+  </div>
+
+  <!-- Modal Add Absence -->
+  <div class="modal fade" id="addAbsenceModal" tabindex="-1" role="dialog" aria-labelledby="addAbsenceModalName"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addAbsenceModalName">Ajout de l'absence </h5>
+          <button #closeModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-      </div>
-    </div>
-    
-    
-    <!-- Modal update Absence -->
-    <div class="modal fade" id="updateAbsenceModal" tabindex="-1" role="dialog" aria-labelledby="updateAbsenceModalName" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="addAbsenceModalName" >Modification de l'absence </h5>
-            <button #closeUpdateModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-         <!-- form update -->
-         <form [formGroup]="absenceFormGroup2" >
-       
-          <div class="form-group">
-            <label for="exampleFormControlInput1">Date</label>
-            <input
-            class="form-control"
-            id="DateAbsence"
-            required
-            formControlName="dateAbsence"
-            name="dateAbsence"
-            type="date"
-            #dateAbsence value="{{absence.dateAbsence}} | date:'dd-MM-yyyy'"
-          />
-          <small *ngIf="submitted && absenceFormGroup2.get('dateAbsence')?.invalid" class="text-danger">Date est obligatoire</small>
-          </div>
-     
-          <div class="form-group">
-            <label for="exampleFormControlInput1">Type</label>
-            <input
-            class="form-control"
-            id="Type"
-            required
-            formControlName="type"
-            name="type"
-            type="string"
-          />
-          <small *ngIf="submitted && absenceFormGroup2.get('type')?.invalid" class="text-danger">Type est obligatoire</small>
-          </div>
-    
-          <div class="form-group">
-              <label for="exampleFormControlInput1">Elève</label>
-              <select class="form-control" id="absence"  formControlName="student"  (ngModelChange)="changeStudent($event)" required [(ngModel)]="absenceModel.student.id" name="id" >
-                <option *ngFor="let student of studentList" [value]="student.value">{{student.lastName}} {{student.firstName}}</option>
-              </select>  
-              <small *ngIf="submitted && absenceFormGroup2.get('student')?.invalid" class="text-danger">Elève est obligatoire</small>
+        <div class="modal-body">
+          <!-- form add -->
+          <form [formGroup]="absenceFormGroup">
+
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Date</label>
+              <input class="form-control" id="DateAbsence" required formControlName="dateAbsence" name="dateAbsence"
+                type="date" #dateAbsence value="{{absence.dateAbsence}} | date:'dd-MM-yyyy'" />
+              <small *ngIf="submitted && absenceFormGroup.get('dateAbsence')?.invalid" class="text-danger">Date est
+                obligatoire</small>
             </div>
-    
-           <button class="btn btn-primary" (click)="updateAbsence()" >Modifier</button>
-          
-        </form>
-       
-          </div>
-         
+
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Type</label>
+              <input class="form-control" id="Type" required formControlName="type" name="type" type="string" />
+              <small *ngIf="submitted && absenceFormGroup.get('type')?.invalid" class="text-danger">Type est
+                obligatoire</small>
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Seance</label>
+              <select class="form-control" id="seance" formControlName="seance" required [(ngModel)]="absenceModel.seance" name="id">
+                <option *ngFor="let seance of seanceList" [value]="seance.id"> :{{seance.day}} => 
+                  {{seance.subject.name}}</option>
+              </select>
+              <small *ngIf="submitted && absenceFormGroup.get('seance')?.invalid" class="text-danger">Seance est
+                obligatoire</small>
+            </div>
+
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Elève</label>
+              <select class="form-control" id="absence" formControlName="student"
+                (ngModelChange)="changeStudent($event)" required [(ngModel)]="absenceModel.student.id" name="id">
+                <option *ngFor="let student of studentList" [value]="student.value">{{student.lastName}}
+                  {{student.firstName}}</option>
+              </select>
+              <small *ngIf="submitted && absenceFormGroup.get('student')?.invalid" class="text-danger">Elève est
+                obligatoire</small>
+            </div>
+
+            <button class="btn btn-primary" (click)="addAbsence()">Ajouter</button>
+
+          </form>
+
         </div>
+
       </div>
     </div>
-    
-    <!-- Modal View Absence -->
-    <div class="modal fade" id="viewAbsenceModal" tabindex="-1" role="dialog" aria-labelledby="viewAbsenceModalName"
+  </div>
+
+
+  <!-- Modal update Absence -->
+  <div class="modal fade" id="updateAbsenceModal" tabindex="-1" role="dialog" aria-labelledby="updateAbsenceModalName"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addAbsenceModalName">Modification de l'absence </h5>
+          <button #closeUpdateModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- form update -->
+          <form [formGroup]="absenceFormGroup2">
+
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Date</label>
+              <input class="form-control" id="DateAbsence" required formControlName="dateAbsence" name="dateAbsence"
+                type="date" #dateAbsence value="{{absence.dateAbsence}} | date:'dd-MM-yyyy'" />
+              <small *ngIf="submitted && absenceFormGroup2.get('dateAbsence')?.invalid" class="text-danger">Date est
+                obligatoire</small>
+            </div>
+
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Type</label>
+              <input class="form-control" id="Type" required formControlName="type" name="type" type="string" />
+              <small *ngIf="submitted && absenceFormGroup2.get('type')?.invalid" class="text-danger">Type est
+                obligatoire</small>
+            </div>
+
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Elève</label>
+              <select class="form-control" id="absence" formControlName="student"
+                (ngModelChange)="changeStudent($event)" required [(ngModel)]="absenceModel.student.id" name="id">
+                <option *ngFor="let student of studentList" [value]="student.value">{{student.lastName}}
+                  {{student.firstName}}</option>
+              </select>
+              <small *ngIf="submitted && absenceFormGroup2.get('student')?.invalid" class="text-danger">Elève est
+                obligatoire</small>
+            </div>
+
+            <button class="btn btn-primary" (click)="updateAbsence()">Modifier</button>
+
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal View Absence -->
+  <div class="modal fade" id="viewAbsenceModal" tabindex="-1" role="dialog" aria-labelledby="viewAbsenceModalName"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -181,33 +183,32 @@
         </div>
         <div class="modal-body">
           <!-- form View -->
-          <form >
-       
+          <form>
+
             <div class="form-group">
               <label><b>Id: </b></label> {{absence!.id}}
             </div>
-    
+
             <div class="form-group">
-              <label><b>Date: </b></label> {{absence!.dateAbsence| date:"dd-MM-yyyy"}}  
+              <label><b>Date: </b></label> {{absence!.dateAbsence| date:"dd-MM-yyyy"}}
             </div>
-    
+
             <div class="form-group">
               <label><b>Type: </b></label> {{absence!.type}}
             </div>
-    
+
             <div class="form-group">
-              <label><b>Elève: </b></label> {{absence!.student!.lastName}} {{absence!.student!.firstName}} 
+              <label><b>Elève: </b></label> {{absence!.student!.lastName}} {{absence!.student!.firstName}}
             </div>
-    
-          
-    
-        </form>
-    
+
+
+
+          </form>
+
         </div>
-    
+
       </div>
     </div>
-    </div>
-    </div>
-    <!-- main-content closed -->
-    
+  </div>
+</div>
+<!-- main-content closed -->

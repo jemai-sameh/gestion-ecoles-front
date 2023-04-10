@@ -30,26 +30,31 @@
         </thead>
         <tbody>
           <tr *ngFor="let sch of schools" class="col-md-6 col-xl-5 " class="tab-sub">
-            <td>{{sch.id}}</td>
-            <td>{{sch.name}}</td>
-            <td>{{sch.address}}</td>
+            <td>{{sch?.id}}</td>
+            <td>{{sch?.name}}</td>
+            <td>{{sch?.address}}</td>
             <td>
               <!-- <button type="button" class="btn btn-info" data-toggle="modal"></button> -->
               <!-- data-target="#exampleModalUpdate">Update</button> -->
-              <a type="button" style="margin-right: 10px;" data-toggle="modal" data-target="#exampleModalUpdate" (click)="getSchool(sch.id)">
-                <i
-                  class="text-warning si si-note"></i>
-                 </a>
+              <a type="button" style="margin-right: 10px;" data-toggle="modal" data-target="#exampleModalUpdate"
+                (click)="getSchool(sch?.id)">
+                <i class="text-warning si si-note"></i>
+              </a>
 
-              <a type="button" style="margin-right: 10px;" (click)="deleteSchool(sch.id)"><i class="text-danger si si-trash"></i> </a>
-                <a type="button" style="margin-right: 10px;" data-toggle="modal" data-target="#exampleModalView" (click)="viewSchool(sch.id)"><i
-                    class=" text-success si si-eye"></i> </a>
-                <a type="button" style="margin-right: 10px;" data-toggle="modal" data-target="#addadminModal" (click)="getSchool(sch.id)">
-                  <i class="text-success fa fa-user-plus"></i> </a>
-                <a type="button" data-toggle="modal" data-target="#SubjectModal"
-                  (click)="findAllAdminBySchool(sch.id)"><i class="text-success fa fa-users"></i> </a>
+              <a type="button" style="margin-right: 10px;" (click)="deleteSchool(sch?.id)"><i
+                  class="text-danger si si-trash"></i> </a>
+              <a type="button" style="margin-right: 10px;" data-toggle="modal" data-target="#exampleModalView"
+                (click)="viewSchool(sch?.id)"><i class=" text-success si si-eye"></i> </a>
 
 
+              <a *ngIf="!sch.admin?.id" type="button" style="margin-right: 10px;" data-toggle="modal"
+                data-target="#addadminModal">
+                <i class="text-success fa fa-user-plus"></i> </a>
+              <a *ngIf="sch.admin?.id" type="button" style="margin-right: 10px;" data-toggle="modal"
+                data-target="#viewadminModal" (click)="viewAdmin(sch?.admin)"><i
+                  class=" text-success fa fa-address-book-o"></i> </a>
+              <!-- <a type="button" data-toggle="modal" data-target="#SubjectModal"
+                  (click)="findAllAdminBySchool(sch.id)"><i class="text-success fa fa-users"></i> </a>-->
             </td>
           </tr>
         </tbody>
@@ -222,8 +227,17 @@
                 <small *ngIf="submitted && adminFormGroup.get('email')?.invalid" class="text-danger">E-mail est
                   obligatoire</small>
               </div>
-
+              <div class="col">
+                <label for="exampleInputPassword">Mot de passe</label>
+                <input type="password" class="form-control form-control-user"
+                  style="background-color: #fff; color: #000;" name="password" id="exampleInputPassword"
+                   formControlName="password">
+                <small *ngIf="submitted && adminFormGroup.get('password')?.invalid" class="text-danger">password est
+                  obligatoire</small>
+              </div>
             </div>
+
+
 
             <div class="form-group row mb-3">
               <div class="col">
@@ -288,5 +302,91 @@
   </div>
 
 
+  <!-- Modal View admin -->
+  <div class="modal fade" id="viewadminModal" tabindex="-1" role="dialog" aria-labelledby="viewadminModalName"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="viewadminModalName">Détail sur l'admin</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group row mb-3">
+            <div class="col">
+              <div class="form-group">
+                <label><b>active </b></label>
+                &nbsp;&nbsp;
+                <i *ngIf=" !admin?.active" style="color: red;" class="fa fa-circle" aria-hidden="true"></i>
+                <i *ngIf="admin?.active" style="color: green;" class="fa fa-circle" aria-hidden="true"></i>
+              </div>
+              <div class="form-group">
+                <label><b>Nom: </b></label> {{admin?.lastName}}
+              </div>
+
+              <div class="form-group">
+                <label><b>Prénom: </b></label> {{admin?.firstName}}
+              </div>
+            </div>
+            <div class="col">
+
+              <div class="form-group">
+                <label><b>E-mail: </b></label> {{admin?.email}}
+              </div>
+
+              <div class="form-group">
+                <label><b>N° Téléphone: </b></label> {{admin?.telephone}}
+              </div>
+
+              <div class="form-group">
+                <label><b>Ecole: </b></label> {{admin?.school?.name}}
+              </div>
+            </div>
+
+          </div>
+
+
+          <!-- form View -->
+          <!--<div class="form-group row mb-3">
+          <div class="col">
+            <div class="form-group">
+              <label><b>active  </b></label> 
+              &nbsp;&nbsp;
+              <i *ngIf=" !admin.active" style="color: red;" class="fa fa-circle" aria-hidden="true"></i>
+              <i *ngIf="admin.active" style="color: green;"  class="fa fa-circle" aria-hidden="true"></i>
+
+             
+            </div>
+            <div class="form-group">
+              <label><b>Nom: </b></label> {{admin?.lastName}}
+            </div>
+
+            <div class="form-group">
+              <label><b>Prénom: </b></label> {{admin?.firstName}}
+            </div>
+          </div>
+          <div class="col">
+             
+            <div class="form-group">
+              <label><b>E-mail: </b></label> {{admin?.email}}
+            </div>
+
+            <div class="form-group">
+              <label><b>N° Téléphone: </b></label> {{admin?.telephone}}
+            </div>
+
+            <div class="form-group">
+              <label><b>Ecole: </b></label> {{admin?.school?.name}}
+            </div>
+          </div>
+
+        </div>  -->
+        </div>
+
+      </div>
+    </div>
+  </div>
 
 </div>

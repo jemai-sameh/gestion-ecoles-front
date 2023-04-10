@@ -6,10 +6,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-
-  constructor() { }
+  name!:string
+  image!:string
+  constructor() { 
+    }
 
   ngOnInit(): void {
+    var user: any;
+    user = localStorage.getItem('user');    
+    this.name=JSON.parse(user).firstName+" "+JSON.parse(user).lastName
+    this.image=JSON.parse(user).image
+  
   }
 
   relogin(){
