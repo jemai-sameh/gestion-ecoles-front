@@ -10,7 +10,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addTeacherModal"><i
+          <button type="button"   *ngIf="role == 'ADMIN'" class="btn btn-info" data-toggle="modal" data-target="#addTeacherModal"><i
               class="si si-plus"></i> Ajouter </button>
         </div>
       </div>
@@ -54,19 +54,19 @@
 
 
             <td>
-              <a type="button" style="margin-right: 10px;" data-mdb-ripple-color="dark" data-toggle="modal"
+              <a type="button" style="margin-right: 10px;" data-mdb-ripple-color="dark" data-toggle="modal"  *ngIf="role == 'ADMIN'"
                 data-target="#updateTeacherModal" (click)="getTeacher(teacher.id)"><i
                   class="text-warning si si-note"></i> </a>
-              <a type="button" style="margin-right: 10px;" (click)="deleteTeacher(teacher.id)"><i
-                  class="text-danger si si-trash"></i> </a>
+             <!-- <a type="button" style="margin-right: 10px;"  *ngIf="role == 'ADMIN'" (click)="deleteTeacher(teacher.id)"><i
+                  class="text-danger si si-trash"></i> </a>-->
               <a type="button" style="margin-right: 10px;" data-toggle="modal" data-target="#viewTeacherModal"
                 (click)="viewTeacher(teacher.id)"><i class="text-success si si-eye"></i> </a>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-              <a type="button" style="margin-right: 10px;" (click)="UpdateStatus(teacher.id,-1)">
+              <a type="button" style="margin-right: 10px;"  *ngIf="role == 'ADMIN'" (click)="UpdateStatus(teacher.id,-1)">
                 <i class="text-danger fas fa-times-circle  me-1"></i> </a>
 
-              <a type="button" style="margin-right: 10px;" (click)="UpdateStatus(teacher.id,1)">
+              <a type="button" style="margin-right: 10px;"  *ngIf="role == 'ADMIN'" (click)="UpdateStatus(teacher.id,1)">
                 <i class="text-success fa fa-check-square  me-1"></i> </a>
             </td>
           </tr>

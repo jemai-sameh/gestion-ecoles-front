@@ -19,7 +19,18 @@ export class AdminService {
       map((response:any) => response as Admin)
     );
   }
- 
+  affectAdminToSchool(admin:Admin,idSchool:number):Observable<Admin> {
+    return this.http.post(`${this.baseurladmin}/affectAdminToSchool/${idSchool}`, admin)
+      .pipe(
+        map((response: any) => response as Admin)
+      );
+  
+  }
+  findAdminBySchool(idSchool: number): Observable<Admin> {
+    return this.http.get(`${this.baseurladmin}/findAdminBySchool/${idSchool}`).pipe(
+      map((response:any) => response as Admin)
+    );
+  }
   findById(id: number): Observable<Admin> {
     return this.http.get(`${this.baseurladmin}/findById/${id}`).pipe(
       map((response:any) => response as Admin)

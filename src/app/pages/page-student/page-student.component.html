@@ -2,7 +2,7 @@
 <div class="main-content app-content">
   <div class="container" id="main-container">
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg  ">
       <div class="container-fluid">
         <a class="navbar-brand" href="students"><b><i class="si si-layers"></i> Liste des élèves</b></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -10,7 +10,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div  class="collapse navbar-collapse" id="navbarSupportedContent">
-          <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addStudentModal"><i
+          <button type="button" *ngIf="role =='ADMIN'" class="btn btn-info" data-toggle="modal" data-target="#addStudentModal"><i
               class="si si-plus"></i> Ajouter </button>
         </div>
       </div>
@@ -23,14 +23,13 @@
 
     <div class="col-md-12">
       <table class="table">
-        <thead class="thead-dark">
+        <thead class="">
           <tr>
             <th scope="col" (click)="sort('id')">#&nbsp;<i class="fa fa-sort"></i></th>
             <th scope="col">Image</th>
             <th scope="col">Nom</th>
             <th scope="col">Prenom</th>
             <th scope="col">Date de naissance</th>
-            <th scope="col">Adresse</th>
             <th scope="col">E-mail</th>
             <th scope="col">N° Téléphone</th>
             <th scope="col">Classe</th>
@@ -49,9 +48,6 @@
             <td>{{student.lastName}}</td>
             <td>{{student.firstName}}</td>
             <td>{{student.dateOfBirth| date:"dd-MM-yyyy"}}</td>
-            <td>{{student.address.address1}},{{student.address.address2}} <br>
-              {{student.address.zipCode}},{{student.address.city}} <br>
-              {{student.address.country}}</td>
             <td>{{student.email}}</td>
             <td>{{student.telephone}}</td>
             <td>{{student.classe.levelClass}} {{student.classe.labelClass}}</td>
@@ -68,12 +64,15 @@
               <a type="button" style="margin-right: 10px;" data-toggle="modal" data-target="#viewStudentModal"
                 (click)="viewStudent(student.id)"><i class="text-warning si si-eye"></i> </a>
 
+                <a type="button" style="margin-right: 10px;"  *ngIf="role == 'TEACHER'" data-toggle="modal" data-target="#addAbsenceModal"
+                (click)="getStudent(student.id)"><i class="text-danger fa fa-exclamation-triangle"></i> </a>
 
 
-              <a type="button" style="margin-right: 10px;" (click)="UpdateStatus(student.id,-1)">
+
+              <a type="button" *ngIf="role=='ADMIN'" style="margin-right: 10px;" (click)="UpdateStatus(student.id,-1)">
                 <i class="text-danger fas fa-times-circle  me-1"></i> </a>
 
-              <a type="button" style="margin-right: 10px;" (click)="UpdateStatus(student.id,1)">
+              <a type="button" *ngIf="role=='ADMIN'" style="margin-right: 10px;" (click)="UpdateStatus(student.id,1)">
                 <i class="text-success fa fa-check-square  me-1"></i> </a>
             </td>
           </tr>
@@ -459,5 +458,64 @@
   </div>
 
 
+   <!-- Modal Add Absence -->
+  <div class="modal fade" id="addAbsenceModal" tabindex="-1" role="dialog" aria-labelledby="addAbsenceModalName"
+   aria-hidden="true">
+   <div class="modal-dialog" role="document">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title" id="addAbsenceModalName">Ajout de l'absence à l'étudiant {{studentModel?.firstName}} {{studentModel?.lastName}}</h5>
+         <button #closeModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+         </button>
+       </div>
+       <div class="modal-body">
+         <!-- form add -->
+         <form [formGroup]="absenceFormGroup">
+
+           <div class="form-group">
+             <label for="dateAbsence">Date</label>
+             <input class="form-control" id="dateAbsence" required formControlName="dateAbsence" name="dateAbsence"
+               type="date" #dateAbsence value=" date:'dd-MM-yyyy'" />
+             <small *ngIf="submitted && absenceFormGroup.get('dateAbsence')?.invalid" class="text-danger">Date est
+               obligatoire</small>
+           </div>
+
+           <div class="form-group">
+             <label for="exampleFormControlInput1">Type</label>
+             <input class="form-control" id="Type" required formControlName="type" name="type" type="string" />
+             <small *ngIf="submitted && absenceFormGroup.get('type')?.invalid" class="text-danger">Type est
+               obligatoire</small>
+           </div>
+           <div class="form-group">
+              <label for="seance">Seance</label>
+              <select class="form-control" name="seance" id="seance" formControlName="seance" required>
+                <option *ngFor="let seance of seanceList" [value]="seance.id"> {{seance.day}} => 
+                  {{seance.subject.name}}</option>
+              </select>
+              <small *ngIf="submitted && absenceFormGroup.get('seance')?.invalid" class="text-danger">Seance est
+                obligatoire</small>
+           </div>
+           <!--<div class="form-group">
+             <label for="exampleFormControlInput1">Seance</label>
+             <select class="form-control" id="seance" formControlName="seance" required [(ngModel)]="absenceModel.seance" name="id">
+               <option *ngFor="let seance of seanceList" [value]="seance.id"> :{{seance.day}} => 
+                 {{seance.subject.name}}</option>
+             </select>
+             <small *ngIf="submitted && absenceFormGroup.get('seance')?.invalid" class="text-danger">Seance est
+               obligatoire</small>
+           </div>
+
+          -->
+
+           <button class="btn btn-primary" (click)="addAbsence()">Ajouter</button>
+
+         </form>
+
+       </div>
+
+     </div>
+   </div>
+ </div>
 </div>
 <!-- main-content closed -->

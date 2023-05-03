@@ -20,8 +20,23 @@ export class AbsenceService {
       map((response:any) => response as Absence)
     );
   }
-  getAbsenceList(): Observable<Absence[]> {
+  /*getAbsenceList(): Observable<Absence[]> {
     return this.http.get<Absence[]>(`${this.baseurlabsence}/listeAbsence`)
+    .pipe(
+      map((response:any) => response as Absence[])
+    );
+    
+  }*/
+  getAbsenceList(id:number): Observable<Absence[]> {
+    return this.http.get<Absence[]>(`${this.baseurlabsence}/findAllBySchool/`+((id===null)?0:id))
+    .pipe(
+      map((response:any) => response as Absence[])
+    );
+    
+  }
+
+  getAllByStudent(id:number): Observable<Absence[]> {
+    return this.http.get<Absence[]>(`${this.baseurlabsence}/findAllByStudent/`+id)
     .pipe(
       map((response:any) => response as Absence[])
     );

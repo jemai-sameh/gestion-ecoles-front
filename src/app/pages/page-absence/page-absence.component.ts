@@ -18,6 +18,7 @@ import Swal from 'sweetalert2';
 })
 export class PageAbsenceComponent implements OnInit {
 
+  role!: string;
   absenceList: Absence[] = [];
   p: number = 1;
   absenceFormGroup!: FormGroup;
@@ -42,10 +43,11 @@ export class PageAbsenceComponent implements OnInit {
   ) {
     var user1: any = localStorage.getItem('user');
     this.user = JSON.parse(user1);
+    this.role = this.authService.getRole();
 
   }
   ngOnInit(): void {
-    this.idSchool = (this.authService.getRole() == 'SUPER_ADMIN') ? null: this.user.school.id;
+    this.idSchool = (this.role == 'SUPER_ADMIN') ? null : (this.role == 'ADMIN') ? this.user?.id : this.user?.school?.id;
 
 
     this.absenceFormGroup = new FormGroup({
@@ -70,19 +72,27 @@ export class PageAbsenceComponent implements OnInit {
   }
 
   getAbsenceList() {
-    this.absenceService.getAbsenceList(this.idSchool).subscribe(res => {
-      this.absenceList = res
-    }, error => {
-      console.error(error)
-    }, () => {
+    if (this.role === "STUDENT")
+      this.absenceService.getAllByStudent(this.user.id).subscribe(res => {
+        this.absenceList = res
+      }, error => {
+        console.error(error)
+      }, () => {
 
-    })
+      })
+    else
+      this.absenceService.getAbsenceList(this.idSchool).subscribe(res => {
+        this.absenceList = res
+      }, error => {
+        console.error(error)
+      }, () => {
+
+      })
   }
 
   getStudents() {
-    this.studentService.getAllStudent().subscribe(
+    this.studentService.getAllStudent(this.idSchool).subscribe(
       res => {
-
         this.studentList = res
       }, error => {
         console.error(error)

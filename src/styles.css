@@ -5,3 +5,32 @@
 @import "../node_modules/alertifyjs/build/css/alertify.css";
 @import "../node_modules/alertifyjs/build/css/themes/bootstrap.min.css";
 @import "../node_modules/alertifyjs//build/css/themes/default.min.css";
+/*.dark-mode{
+ background-color: #d6e6f7 !important;
+}
+.dark-mode .modal-footer, .dark-mode .modal-header, .dark-mode .modal-body{
+    background-color: #769bdd !important;
+
+}
+
+.tab-sub{
+    background-color: #769bdd;
+}
+.table{
+    text-align: center;
+}
+.table th{
+    background-color: #16322f !important;   
+
+}
+.tab tr{
+    border:#ffff 1px solid !important ;  
+
+}
+.table td{
+    color: #16322f !important; 
+    font-weight: 600;
+}
+.navbar-brand {
+    color: #769bdd !important;
+}*/

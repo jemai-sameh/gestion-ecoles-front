@@ -24,25 +24,27 @@ export class ClassroomsComponent implements OnInit {
   // classrooms: any;
   classroom: ClassRoom = new ClassRoom();
   classRoomList: ClassRoom[] = [];
-  schoolList:School[]=[];
-  user!:any;
+  schoolList: School[] = [];
+  user!: any;
   classroomes !: ClassRoom;
   ClassRoomDetail !: FormGroup;
   schools: School[] = [];
-  idSchool!:number;
-  constructor(private router: Router, private formBuilder: FormBuilder, private schoolsService:SchoolsService,private classroomService: ClassroomService,
-    private authService:AuthService
-    ) {
-var user1:any = localStorage.getItem('user');    
-this.user=JSON.parse(user1);
-      
-     }
-ngOnInit(): void {
-this.idSchool=(this.authService.getRole()=='SUPER_ADMIN')? null :this.user.school.id;
+  idSchool!: number;
+  role!:string;
+  constructor(private router: Router, private formBuilder: FormBuilder, private schoolsService: SchoolsService, private classroomService: ClassroomService,
+    private authService: AuthService
+  ) {
+    var user1: any = localStorage.getItem('user');
+    this.user = JSON.parse(user1);
+    this.role=this.authService.getRole();
+
+  }
+  ngOnInit(): void {
+    this.idSchool = (this.role == 'SUPER_ADMIN') ? null : (this.role == 'ADMIN') ? this.user?.id : this.user?.school?.id;
 
     this.reloadData();
     this.getSchools();
-   // this.classroomService.getClassroomList().subscribe(data => this.classRoomList = data);
+    // this.classroomService.getClassroomList().subscribe(data => this.classRoomList = data);
 
 
     this.ClassRoomDetail = new FormGroup({
@@ -74,7 +76,7 @@ this.idSchool=(this.authService.getRole()=='SUPER_ADMIN')? null :this.user.schoo
     this.classroom.id = this.ClassRoomDetail.value.id;
     this.classroom.classRoomNumber = this.ClassRoomDetail.value.classRoomNumber;
     this.classroom.bloc = this.ClassRoomDetail.value.bloc;
-    this.classroom.school.id=this.idSchool
+    this.classroom.school.id = this.idSchool
     this.classroomService.addClassRoom(this.classroom)
       .subscribe({
         next: (res) => {
@@ -165,14 +167,14 @@ this.idSchool=(this.authService.getRole()=='SUPER_ADMIN')? null :this.user.schoo
 
   }
 
-  getSchools(){
+  getSchools() {
     this.schoolsService.getSchoolList().subscribe({
       next: res => {
         this.schoolList = res;
         console.log(this.schoolList)
       },
       error: error => {
-        console.error(error,error);
+        console.error(error, error);
       }
     })
 

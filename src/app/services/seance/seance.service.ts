@@ -28,7 +28,14 @@ export class SeanceService {
     
   }*/
   getSeanceList(id:number): Observable<Seance[]> {
-    return this.http.get<Seance[]>(`${this.baseurlSeance}/findAllBySchool/`+id)
+    return this.http.get<Seance[]>(`${this.baseurlSeance}/findAllBySchool/`+((id===null)?0:id))
+    .pipe(
+      map((response:any) => response as Seance[])
+    );
+    
+  }
+  getSeanceListByClass(id:number): Observable<Seance[]> {
+    return this.http.get<Seance[]>(`${this.baseurlSeance}/findAllByClass/`+id)
     .pipe(
       map((response:any) => response as Seance[])
     );

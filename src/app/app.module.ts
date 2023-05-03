@@ -28,6 +28,7 @@ import { Ng2OrderModule } from 'ng2-order-pipe';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AuthIntercepterService } from './services/interceptor/authInterceptor.service';
 import { PageAdminComponent } from './pages/admin/page-admin/page-admin.component';
+import { SeancesComponent } from './pages/seances/seances.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -52,6 +53,7 @@ import { PageAdminComponent } from './pages/admin/page-admin/page-admin.componen
     AcceuilComponent,
     PageAbsenceComponent,
     PagePlanningComponent,
+    SeancesComponent,
   ],
   imports: [
     HttpClientModule,

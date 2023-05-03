@@ -48,7 +48,7 @@
 
 
               <a *ngIf="!sch.admin?.id" type="button" style="margin-right: 10px;" data-toggle="modal"
-                data-target="#addadminModal">
+                data-target="#addadminModal" (click)="addSchool(sch)">
                 <i class="text-success fa fa-user-plus"></i> </a>
               <a *ngIf="sch.admin?.id" type="button" style="margin-right: 10px;" data-toggle="modal"
                 data-target="#viewadminModal" (click)="viewAdmin(sch?.admin)"><i
@@ -341,7 +341,7 @@
               </div>
 
               <div class="form-group">
-                <label><b>Ecole: </b></label> {{admin?.school?.name}}
+              <!--  <label><b>Ecole: </b></label> {{admin?.school?.name}}-->
               </div>
             </div>
 

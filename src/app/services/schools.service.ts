@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { School } from '../models/School';
+import { Admin } from '../models/admin';
 
 
 @Injectable({
@@ -50,4 +51,5 @@ export class SchoolsService {
       map((response:any) => response as School[])
     );
   }
+  
 }

@@ -12,7 +12,7 @@ export class HomeComponent implements OnInit {
   constructor(private a:AuthService) { }
 
   ngOnInit(): void {
-     console.log(this.a.getRole())
+    // console.log(this.a.getRole())
      var user: any;
     user = localStorage.getItem('user');    
     this.user=JSON.parse(user);

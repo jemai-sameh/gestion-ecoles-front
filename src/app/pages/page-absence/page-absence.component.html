@@ -10,7 +10,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addAbsenceModal"><i
+          <button type="button" *ngIf="role =='ADMIN'" class="btn btn-info" data-toggle="modal" data-target="#addAbsenceModal"><i
               class="si si-plus"></i> Ajouter </button>
         </div>
       </div>
@@ -44,9 +44,9 @@
 
             <td>
               <a type="button" style="margin-right: 10px;" data-mdb-ripple-color="dark" data-toggle="modal"
-                data-target="#updateAbsenceModal" (click)="getAbsence(absence.id)"><i
+                data-target="#updateAbsenceModal"  *ngIf="role == 'ADMIN' and role=='teacher'" (click)="getAbsence(absence.id)"><i
                   class="text-warning si si-note"></i> </a>
-              <a type="button" style="margin-right: 10px;" (click)="deleteAbsence(absence.id)"><i
+              <a type="button" *ngIf="role == 'ADMIN'" style="margin-right: 10px;" (click)="deleteAbsence(absence.id)"><i
                   class="text-danger si si-trash"></i> </a>
               <a type="button" style="margin-right: 10px;" data-toggle="modal" data-target="#viewAbsenceModal"
                 (click)="viewAbsence(absence.id)"><i class="text-success si si-eye"></i> </a>

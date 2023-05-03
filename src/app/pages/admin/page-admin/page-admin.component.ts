@@ -38,7 +38,6 @@ export class PageAdminComponent implements OnInit {
       'email': new FormControl('', Validators.required),
       'telephone': new FormControl('', Validators.required),
       'school': new FormControl('', Validators.required)
-
     });
 
   
@@ -69,7 +68,7 @@ export class PageAdminComponent implements OnInit {
       if (e.lastName.toLowerCase().indexOf(key.toLowerCase()) !== -1
         || e.firstName.toLowerCase().indexOf(key.toLowerCase()) !== -1
         || e.email.toLowerCase().indexOf(key.toLowerCase()) !== -1
-        || e.school.name.toLowerCase().indexOf(key.toLowerCase()) !== -1
+       // || e.school.name.toLowerCase().indexOf(key.toLowerCase()) !== -1
       ) 
         res.push(e);
       
@@ -95,7 +94,7 @@ export class PageAdminComponent implements OnInit {
   changeSchool(event: any) {
     let school: School = new School();
     school.id = event;
-    this.adminModel.school = school;
+    //this.adminModel.school = school;
   }
 
   addadmin() {
@@ -111,7 +110,7 @@ export class PageAdminComponent implements OnInit {
     this.adminModel.lastName = this.adminFormGroup.value.lastName;
     this.adminModel.email = this.adminFormGroup.value.email;
     this.adminModel.telephone = this.adminFormGroup.value.telephone;
-    this.adminModel.school.id = this.adminFormGroup.value.school
+  //  this.adminModel.school.id = this.adminFormGroup.value.school
 
 
     this.adminService.save(this.adminModel)
@@ -142,7 +141,7 @@ export class PageAdminComponent implements OnInit {
           this.adminFormGroup.get("lastName")?.setValue(this.adminModel.lastName);
           this.adminFormGroup.get("email")?.setValue(this.adminModel.email);
           this.adminFormGroup.get("telephone")?.setValue(this.adminModel.telephone);
-          this.adminFormGroup.get("school")?.setValue(this.adminModel.school.id);
+         // this.adminFormGroup.get("school")?.setValue(this.adminModel.school.id);
           this.adminFormGroup.updateValueAndValidity()
         });
     }

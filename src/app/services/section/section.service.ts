@@ -22,13 +22,31 @@ export class SectionService {
       map((response:any) => response as Section)
     );
   }
-  getSectionList(): Observable<Section[]> {
+  /*getSectionList(): Observable<Section[]> {
     return this.http.get<Section[]>(`${this.baseUrlSection}/getAllSections`)
     .pipe(
       map((response:any) => response as Section[])
     );
     
+  }*/
+
+  getAllSectionList(id:number): Observable<LabelValue[]> {
+    return this.http.get<LabelValue[]>(`${this.baseUrlSection}/findAllSectionBySchool/`+((id===null)?0:id))
+    .pipe(
+      map((response:any) => response as LabelValue[])
+    );
+    
   }
+
+  getSectionList(id:number): Observable<Section[]> {
+    return this.http.get<Section[]>(`${this.baseUrlSection}/findAllBySchool/`+((id===null)?0:id))
+    .pipe(
+      map((response:any) => response as Section[])
+    );
+    
+  }
+
+
   deleteSection(id: any): Observable<any> {
     return this.http.delete(`${this.baseUrlSection}/deleteSection/${id}`,{ responseType: 'text' });
   }

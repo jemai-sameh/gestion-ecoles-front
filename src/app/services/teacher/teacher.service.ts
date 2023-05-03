@@ -27,8 +27,15 @@ export class TeacherService {
     const req=new HttpRequest('POST',url,formData,{reportProgress:true,responseType:'text'})
     return this.http.request(req);
   }
-  getTeacherList(): Observable<Teacher[]> {
+  /*getTeacherList(): Observable<Teacher[]> {
     return this.http.get<Teacher[]>(`${this.baseurlteacher}/listerTeacher`)
+    .pipe(
+      map((response:any) => response as Teacher[])
+    );
+    
+  }*/
+  getTeacherList(id:number): Observable<Teacher[]> {
+    return this.http.get<Teacher[]>(`${this.baseurlteacher}/findAllBySchool/`+((id===null)?0:id))
     .pipe(
       map((response:any) => response as Teacher[])
     );

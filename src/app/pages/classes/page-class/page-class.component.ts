@@ -49,7 +49,7 @@ export class PageClassComponent implements OnInit {
 
   }
   ngOnInit(): void {
-    this.idSchool = (this.authService.getRole() == 'SUPER_ADMIN') ? null : this.user.school.id;
+    this.idSchool = (this.authService.getRole() == 'SUPER_ADMIN') ? null :(this.authService.getRole() == 'ADMIN')?this.user?.id:this.user?.school?.id;
 
 
     this.classFormGroup = new FormGroup({
@@ -100,7 +100,7 @@ export class PageClassComponent implements OnInit {
   }
 
   getSections() {
-    this.sectionService.getSections().subscribe(
+    this.sectionService.getAllSectionList(this.idSchool).subscribe(
       res => {
 
         this.sectionList = res

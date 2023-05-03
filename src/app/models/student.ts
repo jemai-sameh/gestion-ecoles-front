@@ -8,6 +8,7 @@ export class Student {
     lastName!:string;
     dateOfBirth!:Date;
     email!:string;
+    password!:String;
     telephone!:string;
     image!:string;
     address!:Address;

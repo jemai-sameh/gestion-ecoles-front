@@ -19,8 +19,14 @@ export class ClassService {
       map((response:any) => response as Classe)
     );
   }
-  findAll(): Observable<Classe[]> {
+  findAllClass(): Observable<Classe[]> {
     return this.http.get<Classe[]>(`${this.baseurl}/findAll`)
+    .pipe(
+      map((response:any) => response as Classe[])
+    );
+  }
+  findAll(id:number): Observable<Classe[]> {
+    return this.http.get<Classe[]>(`${this.baseurl}/findAllBySchool/`+((id===null)?0:id))
     .pipe(
       map((response:any) => response as Classe[])
     );

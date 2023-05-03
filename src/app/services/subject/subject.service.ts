@@ -20,13 +20,22 @@ export class SubjectService {
       map((response:any) => response as Subject)
     );
   }
-  getSubjectList(): Observable<Subject[]> {
+ /* getSubjectList(): Observable<Subject[]> {
     return this.http.get<Subject[]>(`${this.baseUrlSubject}/getAllSubjects`)
     .pipe(
       map((response:any) => response as Subject[])
     );
     
   }
+*/
+  getSubjectList(id:number): Observable<Subject[]> {
+    return this.http.get<Subject[]>(`${this.baseUrlSubject}/findAllBySchool/`+((id===null)?0:id))
+    .pipe(
+      map((response:any) => response as Subject[])
+    );
+    
+  }
+
   deleteSubject(id: any): Observable<any> {
     return this.http.delete(`${this.baseUrlSubject}/deleteSubject/${id}`,{ responseType: 'text' });
   }

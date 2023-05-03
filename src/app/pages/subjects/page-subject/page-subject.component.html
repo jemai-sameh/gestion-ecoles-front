@@ -9,7 +9,7 @@
       <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <button type="button" class="btn btn-info"   data-toggle="modal" data-target="#addSubjectModal"><i class="si si-plus"></i> Ajouter  </button>
+      <button type="button" *ngIf="role =='ADMIN'" class="btn btn-info"   data-toggle="modal" data-target="#addSubjectModal"><i class="si si-plus"></i> Ajouter  </button>
       </div>
   </div>
   <div class="container-fluid" id="searchbar">
@@ -36,8 +36,8 @@
               
               
               <td>
-                <a type="button" style="margin-right: 10px;" data-mdb-ripple-color="dark" data-toggle="modal" data-target="#updateSubjectModal" (click)="getSubject(subject.id)"><i class="text-warning si si-note"></i> </a>
-                  <a type="button" style="margin-right: 10px;" (click)="deleteSubject(subject.id)"><i class="text-danger si si-trash"></i> </a>
+                <a type="button" style="margin-right: 10px;" data-mdb-ripple-color="dark" data-toggle="modal"  *ngIf="role == 'ADMIN'" data-target="#updateSubjectModal" (click)="getSubject(subject.id)"><i class="text-warning si si-note"></i> </a>
+                  <a type="button" style="margin-right: 10px;"  *ngIf="role == 'ADMIN'" (click)="deleteSubject(subject.id)"><i class="text-danger si si-trash"></i> </a>
                     <a type="button" data-toggle="modal" data-target="#viewSubjectModal"  (click)="viewSubject(subject.id)"><i class="text-success si si-eye"></i> </a>
               </td>
       </tr>

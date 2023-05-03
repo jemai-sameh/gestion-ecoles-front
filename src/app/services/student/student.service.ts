@@ -28,13 +28,22 @@ export class StudentService {
     const req=new HttpRequest('POST',url,formData,{reportProgress:true,responseType:'text'})
     return this.http.request(req);
   }
+  getStudentList(id:number): Observable<Student[]> {
+    return this.http.get<Student[]>(`${this.baseurlstudent}/findAllBySchool/`+((id===null)?0:id))
+    .pipe(
+      map((response:any) => response as Student[])
+    );
+    
+  }
+  
+  /*
   getStudentList(): Observable<Student[]> {
     return this.http.get<Student[]>(`${this.baseurlstudent}/listeStudent`)
     .pipe(
       map((response:any) => response as Student[])
     );
     
-  }
+  }*/
   deleteStudent(id: any): Observable<any> {
     return this.http.delete(`${this.baseurlstudent}/deleteStudent/${id}`,{ responseType: 'text' });
   }
@@ -49,8 +58,8 @@ export class StudentService {
     );
   }
 
-  getAllStudent(): Observable<NameValue[]> {
-    return this.http.get<NameValue[]>(`${this.baseurlstudent}/allStudent`)
+  getAllStudent(idSchool:number): Observable<NameValue[]> {
+    return this.http.get<NameValue[]>(`${this.baseurlstudent}/allStudent/${idSchool}`)
     .pipe(
       map((response:any) => response as NameValue[])
     );

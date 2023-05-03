@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Section } from 'src/app/models/section';
 import { SectionService } from 'src/app/services/section/section.service';
 import Swal from 'sweetalert2';
+import { LabelValue } from 'src/app/models/labelValue';
 
 @Component({
   selector: 'app-page-section',
@@ -39,7 +40,7 @@ export class PageSectionComponent implements OnInit {
 
   }
   ngOnInit(): void {
-    this.idSchool = (this.authService.getRole() == 'SUPER_ADMIN') ? null : this.user.school.id;
+    this.idSchool = (this.authService.getRole() == 'SUPER_ADMIN') ? null :(this.authService.getRole() == 'ADMIN')?this.user?.id:this.user?.school?.id;
 
     this.sectionFormGroup = new FormGroup({
       'code' : new FormControl({value: '', disabled: true}, Validators.required),

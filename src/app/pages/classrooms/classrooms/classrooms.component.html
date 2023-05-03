@@ -9,7 +9,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal"><i
+          <button type="button" *ngIf="role =='ADMIN'" class="btn btn-info" data-toggle="modal" data-target="#exampleModal"><i
               class="si si-plus"></i> Ajouter </button>
         </div>
       </div>
@@ -37,9 +37,9 @@
             <td>
 
               <a type="button" style="margin-right: 10px;" data-toggle="modal"
-                data-target="#exampleModalUpdate" (click)="getClassroom(room.id)"><i class="text-warning si si-note"></i> </a>
+                data-target="#exampleModalUpdate"  *ngIf="role == 'ADMIN'" (click)="getClassroom(room.id)"><i class="text-warning si si-note"></i> </a>
 
-                <a type="button" style="margin-right: 10px;" (click)="classroomDelete(room.id)"><i
+                <a type="button" style="margin-right: 10px;"  *ngIf="role == 'ADMIN'" (click)="classroomDelete(room.id)"><i
                   class="text-danger si si-trash"></i> </a>
                   <a type="button" style="margin-right: 10px;" data-toggle="modal"
                 data-target="#exampleModalView" (click)="viewClassRoom(room.id)"><i class="text-success si si-eye"></i> </a>

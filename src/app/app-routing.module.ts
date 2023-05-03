@@ -18,6 +18,7 @@ import { SchoolsComponent } from './pages/schools/schools.component';
 import { PageSectionComponent } from './pages/sections/page-section/page-section.component';
 import { PageSubjectComponent } from './pages/subjects/page-subject/page-subject.component';
 import { AuthGaurdService } from './services/guard/auth-gaurd.service';
+import { SeancesComponent } from './pages/seances/seances.component';
 
 const routes: Routes = [
   {path:"acc",component:AcceuilComponent ,children:[
@@ -34,6 +35,8 @@ const routes: Routes = [
   {path :"teachers",component:PageTeacherComponent,canActivate : [AuthGaurdService] },
   {path :"students",component:PageStudentComponent,canActivate : [AuthGaurdService] },
   {path :"absences",component:PageAbsenceComponent,canActivate : [AuthGaurdService] },
+  {path :"seances",component:SeancesComponent,canActivate : [AuthGaurdService] },
+
   {path :"plannings",component:PagePlanningComponent,canActivate : [AuthGaurdService] },
   {path:"header",component:HeaderComponent},
   {path:"footer",component:FooterComponent}

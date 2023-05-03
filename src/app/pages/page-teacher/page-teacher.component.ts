@@ -31,6 +31,7 @@ export class PageTeacherComponent implements OnInit {
   file!: File;
   imgUrl: string | ArrayBuffer = 'assets/img/avatar.png'
   idSchool!: number;
+  role!:string
   @ViewChild('closeModalBtn') closeModalBtn!: ElementRef;
   @ViewChild('closeUpdateModalBtn') closeUpdateModalBtn!: ElementRef;
   user!: any
@@ -42,10 +43,11 @@ export class PageTeacherComponent implements OnInit {
   ) {
     var user1: any = localStorage.getItem('user');
     this.user = JSON.parse(user1);
+    this.role=this.authService.getRole();
 
   }
   ngOnInit(): void {
-    this.idSchool = (this.authService.getRole() == 'SUPER_ADMIN') ? null : this.user.school.id;
+    this.idSchool = (this.role == 'SUPER_ADMIN') ? null :(this.role == 'ADMIN')?this.user?.id:this.user?.school?.id;
 
 
     this.teacherFormGroup = new FormGroup({

@@ -10,6 +10,10 @@ import { StudentService } from 'src/app/services/student/student.service';
 import Swal from 'sweetalert2';
 import { SchoolsService } from 'src/app/services/schools.service';
 import { AuthService } from 'src/app/services/auth/auth-service';
+import { SeanceService } from 'src/app/services/seance/seance.service';
+import { Seance } from 'src/app/models/seance';
+import { Absence } from 'src/app/models/absence';
+import { AbsenceService } from 'src/app/services/absence/absence.service';
 //import * as alertifyjs from 'alertifyjs';
 
 @Component({
@@ -23,11 +27,14 @@ export class PageStudentComponent implements OnInit {
   p: number = 1;
   studentFormGroup!: FormGroup;
   studentFormGroup2!: FormGroup;
+  absenceFormGroup!:FormGroup;
 
   submitted: boolean = false;
   classList: Classe[] = [];
   schoolList: School[] = []
+  seanceList:Seance[]=[];
   studentModel: Student = new Student();
+  absenceModel:Absence=new Absence();
   student: Student = new Student(); // used for view 
   adr: Address = new Address();
   adr1: Address[] = [];
@@ -42,7 +49,9 @@ export class PageStudentComponent implements OnInit {
     private studentService: StudentService,
     private classService: ClassService,
     private schoolService: SchoolsService,
+    private absenceService:AbsenceService,
     private toastrService: ToastrService,
+    private seanceService:SeanceService,
     private authService: AuthService
   ) {
     var user1: any = localStorage.getItem('user');
@@ -52,7 +61,7 @@ export class PageStudentComponent implements OnInit {
   ngOnInit(): void {
     this.role=this.authService.getRole()
 
-    this.idSchool = (this.role== 'SUPER_ADMIN') ? null : this.user?.school?.id;
+    this.idSchool = (this.role == 'SUPER_ADMIN') ? null :(this.role == 'ADMIN')?this.user?.id:this.user?.school?.id;
 
 
     this.studentFormGroup = new FormGroup({
@@ -92,9 +101,16 @@ export class PageStudentComponent implements OnInit {
 
     });
 
+    this.absenceFormGroup = new FormGroup({
+      'dateAbsence': new FormControl('', Validators.required),
+      'type': new FormControl('', Validators.required),
+      'seance': new FormControl('', Validators.required),
+    });
+
     this.getStudentList();
     this.getClasses();
     this.getSchools();
+    this.getSeances();
 
   }
 
@@ -113,6 +129,18 @@ export class PageStudentComponent implements OnInit {
       res => {
 
         this.classList = res
+      }, error => {
+        console.error(error)
+      }, () => {
+
+      }
+    )
+  }
+  getSeances() {
+    this.seanceService.getSeanceList(this.idSchool).subscribe(
+      res => {
+
+        this.seanceList = res
       }, error => {
         console.error(error)
       }, () => {
@@ -253,7 +281,36 @@ export class PageStudentComponent implements OnInit {
         });
     }
   }
+  addAbsence() {
+    this.submitted = true;
+    if (this.absenceFormGroup.invalid) {
+      return;
+    }
+    this.absenceModel.dateAbsence = this.absenceFormGroup.value.dateAbsence;
+    this.absenceModel.type = this.absenceFormGroup.value.type;
+    this.absenceModel.student.id = this.studentModel.id;
+    let s: Seance = new Seance();
+    s.id = this.absenceFormGroup.value.seance;
+    this.absenceModel.seance = s;
 
+
+
+    this.absenceService.saveAbsence(this.absenceModel)
+      .subscribe({
+        next: (res) => {
+
+          this.closeModalBtn.nativeElement.click()
+          this.getStudentList();
+          this.submitted = false;
+          this.absenceModel = new Absence();
+          this.studentModel = new Student();
+
+          this.absenceFormGroup.reset();
+          this.toastrService.success('Success!', 'Votre absence a été ajoutée!');
+
+        },
+      });
+  }
   updateStudent() {
     this.submitted = true;
     if (this.studentFormGroup2.invalid) {

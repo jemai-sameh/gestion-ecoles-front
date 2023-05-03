@@ -5,11 +5,12 @@ export class Admin {
     firstName!:string;
     lastName!:string;
     email!:string;
+    password!:string
     telephone!:string;
     active!:Boolean
-    school!:School;
+   // school!:School;
     constructor(){
-        this.school = new School();
+      //  this.school = new School();
 
      };
 }

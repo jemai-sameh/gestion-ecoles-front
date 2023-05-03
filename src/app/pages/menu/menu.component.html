@@ -64,14 +64,7 @@
               </p>
             </a>
           </li>
-          <li *ngIf="role=='ADMIN' || role=='TEACHER' || role=='STUDENT'" class="nav-item">
-            <a routerLink="plannings" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
-              <p>
-                Emploi du temps
-              </p>
-            </a>
-          </li>
+          
           <li *ngIf="role=='ADMIN' || role=='SUPER_ADMIN'" class="nav-item">
             <a routerLink="teachers" class="nav-link">
               <i class="nav-icon fas fa-chalkboard-teacher"></i>
@@ -80,7 +73,7 @@
               </p>
             </a>
           </li>
-          <li *ngIf="role=='ADMIN' || role=='SUPER_ADMIN' " class="nav-item">
+          <li *ngIf="role=='ADMIN' || role=='SUPER_ADMIN' || role=='TEACHER' " class="nav-item">
             <a routerLink="students" class="nav-link">
               <i class="nav-icon fas fa-book-reader"></i>
               <p>
@@ -93,6 +86,23 @@
               <i class="nav-icon fas fa-th"></i>
               <p>
                 Salle
+              </p>
+            </a>
+          </li>
+          <li *ngIf="role=='ADMIN' || role=='TEACHER' || role=='STUDENT'" class="nav-item">
+            <a routerLink="seances" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Seances
+              </p>
+            </a>
+          </li>
+          
+          <li *ngIf="role=='ADMIN' || role=='TEACHER' || role=='STUDENT'" class="nav-item">
+            <a routerLink="plannings" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Emploi du temps
               </p>
             </a>
           </li>

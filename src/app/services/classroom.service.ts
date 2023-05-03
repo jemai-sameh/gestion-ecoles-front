@@ -21,15 +21,23 @@ export class ClassroomService {
     );
   }
 
-  getClassroomList(): Observable<ClassRoom[]> {
+  getClassroomList(id:number): Observable<ClassRoom[]> {
 
-    return this.http.get<ClassRoom[]>(`${this.baseurl}/getAllClassRooms`)
+    return this.http.get<ClassRoom[]>(`${this.baseurl}/findAllBySchool/`+((id===null)?0:id))
     .pipe(
       map((response:any) => response as ClassRoom[])
     );
     
   }
 
+  /*getClassroomList(): Observable<ClassRoom[]> {
+
+    return this.http.get<ClassRoom[]>(`${this.baseurl}/getAllClassRooms`)
+    .pipe(
+      map((response:any) => response as ClassRoom[])
+    );
+    
+  }*/
   deleteClassRoom(id: any): Observable<any> {
     return this.http.delete(`${this.baseurl}/deleteClassRoom/${id}`, { responseType: 'text' });
   }

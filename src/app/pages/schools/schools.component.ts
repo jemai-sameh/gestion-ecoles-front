@@ -96,9 +96,11 @@ export class SchoolsComponent implements OnInit {
 
   //ADD School
   ajoutSchool(): void {
-    this.school.id = this.SchoolDetail.value.id;
+    this.school=new School();
+    this.school.id = 0;
     this.school.name = this.SchoolDetail.value.name;
     this.school.address = this.SchoolDetail.value.address;
+    console.log(this.school)
     this.schoolService.ajouterSchool(this.school)
       .subscribe({
         next: (res) => {
@@ -186,16 +188,17 @@ export class SchoolsComponent implements OnInit {
     }
 
     let adminModel: Admin = new Admin();
-
+    //adminModel.id=this.school.id;
     adminModel.firstName = this.adminFormGroup.value.firstName;
     adminModel.lastName = this.adminFormGroup.value.lastName;
     adminModel.email = this.adminFormGroup.value.email;
     adminModel.telephone = this.adminFormGroup.value.telephone;
     adminModel.password=this.adminFormGroup.value.password
-    adminModel.school.id = this.school.id;
+    adminModel.active=false
+    //adminModel.school.id = this.school.id;
 
 
-    this.adminService.affectAdminToSchool(adminModel)
+    this.adminService.affectAdminToSchool(adminModel,this.school.id)
       .subscribe({
         next: (res) => {
           this.reloadData();

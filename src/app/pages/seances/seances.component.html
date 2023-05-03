@@ -1,1 +1,266 @@
-<p>seances works!</p>
+<!-- main-content -->
+<div class="main-content app-content">
+    <div class="container" id="main-container">
+  
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="Seances"><b><i class="si si-layers"></i> Liste des Seances</b></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <button type="button" *ngIf="role =='ADMIN'" class="btn btn-info" data-toggle="modal" data-target="#addSeanceModal"><i
+                class="si si-plus"></i> Ajouter </button>
+          </div>
+        </div>
+        <div class="container-fluid" id="searchbar">
+          <input (ngModelChange)="searchBy(key.value)" ngModel #key="ngModel" type="search" name="key" id="searchName"
+            class="form-control mr-sm-5" placeholder="Rechercher seances..." required>
+        </div>
+      </nav>
+  
+  
+      <div class="col-md-12">
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col" (click)="sort('id')">#&nbsp;<i class="fa fa-sort"></i></th>
+              <th scope="col">Date</th>
+              <th scope="col">Professeur</th>
+              <th scope="col">Matiére</th>
+              <th scope="col">Salle</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let seance of seanceList | orderBy: key1: reverse | paginate: {itemsPerPage:3,currentPage:p} , index as i"
+              class="tab-sec">
+              <td>{{seance.id}}</td>
+              <td>{{seance.day}}</td>
+              <td>{{seance?.teacher?.firstName}} {{seance?.teacher?.lastName}}</td>
+              <td>{{seance?.subject?.name}} </td>  
+              <td>{{seance?.classRoom?.classRoomNumber}} {{seance?.classRoom?.bloc}}</td>
+  
+  
+              <td>
+                <a type="button" style="margin-right: 10px;" data-mdb-ripple-color="dark" data-toggle="modal"
+                  data-target="#updateSeanceModal"  *ngIf="role == 'ADMIN'" (click)="getSeance(seance.id)"><i
+                    class="text-warning si si-note"></i> </a>
+                <a type="button" style="margin-right: 10px;"  *ngIf="role == 'ADMIN'" (click)="deleteSeance(seance.id)"><i
+                    class="text-danger si si-trash"></i> </a>
+                <a type="button" data-toggle="modal" data-target="#viewSeanceModal" (click)="viewSeance(seance.id)"><i
+                    class="text-success si si-eye"></i> </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+      </div>
+    </div>
+  
+    <!-- Modal Add Seance -->
+    <div class="modal fade" id="addSeanceModal" tabindex="-1" role="dialog" aria-labelledby="addSeanceModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addSeanceModalLabel">Ajout du filière </h5>
+            <button #closeModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- form add -->
+            <form [formGroup]="seanceFormGroup">
+              <div class="form-group">
+                <label for="day">Date</label>
+                <input class="form-control" id="day" required formControlName="day" name="day" type="date"/>
+                <small *ngIf="submitted && seanceFormGroup.get('day')?.invalid" class="text-danger">Date est
+                  obligatoire</small>
+              </div>
+              <div class="form-group row mb-3">
+                <div class="col">
+                  <label for="class">Classe</label>
+                  <select type="string" class="form-control" id="classe" formControlName="classe" required  name="classe">
+                    <option *ngFor="let cls of classList" [value]="cls.id">{{cls.levelClass}} {{cls.labelClass}}</option>
+                  </select>
+                  <small *ngIf="seanceFormGroup.get('classe')?.invalid && seanceFormGroup.get('classe')?.touched"
+                    class="text-danger">Classe est obligatoire</small>
+                </div>
+              </div>
+              <div class="form-group row mb-3">
+                <div class="col">
+                  <label for="teacher">Professeur</label>
+                  <select class="form-control" id="teacher" formControlName="teacher" 
+                    required name="id">
+                    <option *ngFor="let cls of teacherList" [value]="cls.id">{{cls.firstName}} {{cls.lastName}}</option>
+                  </select>
+                  <small *ngIf="seanceFormGroup.get('teacher')?.invalid && seanceFormGroup.get('teacher')?.touched"
+                    class="text-danger">Professeur est obligatoire</small>
+                </div>
+              </div>
+  
+              <div class="form-group row mb-3">
+                <div class="col">
+                  <label for="subject">Matiére</label>
+                  <select class="form-control" id="subject" formControlName="subject" required name="id">
+                    <option *ngFor="let cls of subjectList" [value]="cls.id">{{cls.name}} {{cls.coefficient}}</option>
+                  </select>
+                  <small *ngIf="seanceFormGroup.get('subject')?.invalid && seanceFormGroup.get('subject')?.touched"
+                    class="text-danger">Matiére est obligatoire</small>
+                </div>
+              </div>
+              <div class="form-group row mb-3">
+                <div class="col">
+                  <label for="classRoom">Salle</label>
+                  <select class="form-control" id="classRoom" formControlName="classRoom" 
+                    required name="id">
+                    <option *ngFor="let cls of classroomList" [value]="cls.id">{{cls.classRoomNumber}} {{cls.bloc}}</option>
+                  </select>
+                  <small *ngIf="seanceFormGroup.get('classRoom')?.invalid && seanceFormGroup.get('classRoom')?.touched"
+                    class="text-danger">Salle est obligatoire</small>
+                </div>
+              </div>
+  
+              <button class="btn btn-primary" (click)="addSeance()">Ajouter</button>
+  
+            </form>
+  
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  
+  
+   
+
+  <!-- Modal update Section -->
+  <div class="modal fade" id="updateSeanceModal" tabindex="-1" role="dialog" aria-labelledby="updateSeanceModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addSeanceModalLabel">Modification du Seance </h5>
+        <button #closeUpdateModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- form update -->
+        <form [formGroup]="seanceFormGroup2">
+
+
+          <div class="form-group">
+            <label for="day">Date</label>
+            <input class="form-control" id="day" required formControlName="day" name="day" type="date"/>
+            <small *ngIf="submitted && seanceFormGroup2.get('day')?.invalid" class="text-danger">Date est
+              obligatoire</small>
+          </div>
+          <div class="form-group row mb-3">
+            <div class="col">
+              <label for="classe">Classe</label>
+              <select type="string" class="form-control" id="classe" formControlName="classe" required  name="id">
+                <option *ngFor="let cls of classList" [value]="cls.id">{{cls.levelClass}} {{cls.labelClass}}</option>
+              </select>
+              <small *ngIf="seanceFormGroup2.get('classe')?.invalid && seanceFormGroup2.get('classe')?.touched"
+                class="text-danger">classe est obligatoire</small>
+            </div>
+          </div>
+          
+          <div class="form-group row mb-3">
+            <div class="col">
+              <label for="teacher">Professeur</label>
+              <select type="string" class="form-control" id="teacher" formControlName="teacher" required  name="id">
+                <option *ngFor="let cls of teacherList" [value]="cls.id">{{cls.firstName}} {{cls.lastName}}</option>
+              </select>
+              <small *ngIf="seanceFormGroup2.get('teacher')?.invalid && seanceFormGroup2.get('teacher')?.touched"
+                class="text-danger">Professeur est obligatoire</small>
+            </div>
+          </div>
+          
+          
+          <div class="form-group row mb-3">
+            <div class="col">
+              <label for="subject">Matiére</label>
+              <select class="form-control" id="subject" formControlName="subject" 
+                required name="id">
+                <option *ngFor="let cls of subjectList" [value]="cls.id">{{cls.name}} ,coef: {{cls.coefficient}}</option>
+              </select>
+              <small *ngIf="seanceFormGroup2.get('subject')?.invalid && seanceFormGroup2.get('subject')?.touched"
+                class="text-danger">Matiére est obligatoire</small>
+            </div>
+          </div>
+          <div class="form-group row mb-3">
+            <div class="col">
+              <label for="classRoom">Salle</label>
+              <select class="form-control" id="classRoom" formControlName="classRoom" 
+                required name="id">
+                <option *ngFor="let cls of classroomList" [value]="cls.id">{{cls.classRoomNumber}} {{cls.bloc}}</option>
+              </select>
+              <small *ngIf="seanceFormGroup2.get('classRoom')?.invalid && seanceFormGroup2.get('classRoom')?.touched"
+                class="text-danger">Salle est obligatoire</small>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" (click)="updateSeance()">Modifier</button>
+
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal View Section -->
+<div class="modal fade" id="viewSeanceModal" tabindex="-1" role="dialog" aria-labelledby="viewSeanceModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewSeanceModalLabel">Détails du Seance</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- form View -->
+        <form>
+
+          <div class="form-group">
+            <label><b>Id: </b></label> {{seance!.id}}
+          </div>
+
+          <div class="form-group">
+            <label><b>Date: </b></label> {{seance!.day}}
+          </div>
+
+          <div class="form-group">
+            <label><b>Classe: </b></label> {{seance?.classe?.levelClass}} {{seance?.classe?.labelClass}}
+          </div>
+
+          <div class="form-group">
+            <label><b>Professeur: </b></label> {{seance?.teacher?.firstName}} {{seance?.teacher?.lastName}}
+          </div>
+
+          <div class="form-group">
+            <label><b>Matiére: </b></label> {{seance?.subject?.name}}
+          </div>
+
+          <div class="form-group">
+            <label><b>Salle: </b></label> {{seance?.classRoom?.classRoomNumber}} {{seance?.classRoom?.bloc}}
+          </div>         
+                 
+
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+<!-- main-content closed -->

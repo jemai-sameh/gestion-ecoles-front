@@ -13,25 +13,54 @@ import { environment } from 'src/environments/environment';
 export class AuthService {
 
 
-constructor(private router : Router,private httpClient: HttpClient) { }
-  private baseUrl=environment.baseurl+"/auth"
-  isUserAuthenticated():boolean{
-    if (localStorage.getItem ("accesstoken")){
+  constructor(private router: Router, private httpClient: HttpClient) { }
+  private baseUrl = environment.baseurl + "/auth"
+  isUserAuthenticated(): boolean {
+    if (localStorage.getItem("accesstoken")) {
       return true;
     }
     this.router.navigate(["/login"])
-return false;
+    return false;
   }
-  login(authenticationRequest : AuthenticationRequest):Observable<AuthenticationResponse>{
-    const url=this.baseUrl+"/authenticate"
-    return this.httpClient.post(url,authenticationRequest)
+  login(authenticationRequest: AuthenticationRequest): Observable<AuthenticationResponse> {
+    const url = this.baseUrl + "/authenticate"
+    return this.httpClient.post(url, authenticationRequest)
   }
-  setUserToken (authenticationResponse: AuthenticationResponse){
-    localStorage.setItem("accesstoken",JSON.stringify(authenticationResponse))
+  setUserToken(authenticationResponse: AuthenticationResponse) {
+    localStorage.setItem("accesstoken", JSON.stringify(authenticationResponse))
+    this.addUserStorage();
+    // localStorage.setItem("mailUser",JSON.stringify(authenticationResponse.name))
+  }
+  register(registerRequest: RegisterRequest): Observable<AuthenticationResponse> {
+    const url = this.baseUrl + "/register"
+    return this.httpClient.post(url, registerRequest)
+  }
+  getRole = () => {
+    var user: any;
+    user = localStorage.getItem('accesstoken');
+    let token = JSON.parse(user).token;
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
+    return decodedToken.authorities[0].authority;
+  }
+    findUser(email: string): Observable<any> {
+      
+      return this.httpClient.get(`${this.baseUrl}/findByEmail/${email}`);
+  }
 
-  }
-  register(registerRequest: RegisterRequest):Observable<AuthenticationResponse>{
-    const url=this.baseUrl+"/register"
-    return this.httpClient.post(url,registerRequest)
+  addUserStorage = () => {
+    var user: any;
+    user = localStorage.getItem("accesstoken");
+    let token = JSON.parse(user).token;
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
+    const mail = decodedToken.sub;
+    this.findUser(mail).subscribe({
+      next:data=> {
+        console.log(data)
+    localStorage.setItem("user", JSON.stringify(data))
+      }
+    });
+    
+
+
   }
 }
