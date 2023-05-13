@@ -305,6 +305,26 @@ export class SeancesComponent implements OnInit {
     }
   }
 
+  changeList(event :any,type:string){
+    let id =+event.target.value;
+    console.log(id)
+    switch (type) {
+      case "teacher":
+        this.teacherService.findAllTeacherBySubject(id,this.idSchool).subscribe({
+          next:data=>{
+            this.teacherList=data;
+          }
+        })
+        break;
+      case "subject":
+        this.subjectService.findAllSubjectsByClass(id,this.idSchool).subscribe({
+          next:data=>{
+            this.subjectList=data;
+          }
+        })
+        break;
+    }
 
+  }
 
 }

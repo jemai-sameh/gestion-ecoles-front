@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 import { ClassRoom } from 'src/app/models/classroom';
 import { School } from 'src/app/models/School';
@@ -31,7 +32,7 @@ export class ClassroomsComponent implements OnInit {
   schools: School[] = [];
   idSchool!: number;
   role!:string;
-  constructor(private router: Router, private formBuilder: FormBuilder, private schoolsService: SchoolsService, private classroomService: ClassroomService,
+  constructor(private router: Router,     private toastrService: ToastrService,    private formBuilder: FormBuilder, private schoolsService: SchoolsService, private classroomService: ClassroomService,
     private authService: AuthService
   ) {
     var user1: any = localStorage.getItem('user');
@@ -81,8 +82,11 @@ export class ClassroomsComponent implements OnInit {
       .subscribe({
         next: (res) => {
           console.log(res);
-          alert('Classroom created successfully');
           location.reload();
+          this.toastrService.success('Success!', 'Votre class a été ajoutée!');
+
+
+        
 
         },
       });
@@ -92,12 +96,12 @@ export class ClassroomsComponent implements OnInit {
   // delete classroom
   classroomDelete(id: any) {
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'You will not be able to recover this imaginary file!',
+      title: 'Êtes-vous sûr?',
+      text: 'Vous ne pourrez pas récupérer cette seance!',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, keep it'
+      confirmButtonText: 'Oui, supprimez-la!',
+      cancelButtonText: 'Non, gardez-la'
     }).then((result) => {
       if (result.value) {
         // alert(id);
@@ -106,15 +110,15 @@ export class ClassroomsComponent implements OnInit {
             this.reloadData();
           })
         Swal.fire(
-          'Deleted!',
-          'Your imaginary file has been deleted.',
+          'Supprimé!',
+          'Votre salle a été suppriméed.',
           'success'
         )
 
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire(
-          'Cancelled',
-          'Your imaginary file is safe 🙂',
+          'Annulé',
+          'Votre salle est en sécurité🙂',
           'error'
         )
       }
@@ -137,8 +141,10 @@ export class ClassroomsComponent implements OnInit {
         .subscribe({
           next: (res) => {
             console.log(res);
-            alert('classroom updated successfully');
             location.reload();
+            this.toastrService.success('Success!', 'Votre classe a été modifiée!');
+
+            
           },
         });
     }

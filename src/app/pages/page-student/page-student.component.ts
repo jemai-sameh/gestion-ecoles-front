@@ -151,15 +151,23 @@ export class PageStudentComponent implements OnInit {
   getSchools() {
     this.schoolService.getSchoolList().subscribe(
       res => {
-
         this.schoolList = res
       }, error => {
         console.error(error)
       }, () => {
-
       }
     )
   }
+  Absence(student:Student){
+      this.getStudent(student.id);
+      console.log(student.classe.id)
+      this.seanceService.getSeanceListByClass(student.classe.id).subscribe({
+        next:data=>{
+          this.seanceList=data;
+        }
+      })
+  }
+
 
   public searchBy(key: string): void {
 
@@ -194,13 +202,11 @@ export class PageStudentComponent implements OnInit {
   }
 
   changeClass(event: any) {
-
     let classe: Classe = new Classe();
     classe.id = event;
     this.studentModel.classe = classe;
   }
   changeSchool(event: any) {
-
     let school: School = new School();
     school.id = event;
     this.studentModel.school = school;
@@ -212,21 +218,20 @@ export class PageStudentComponent implements OnInit {
     if (this.studentFormGroup.invalid) {
       return;
     }
-
-
     this.adr.address1 = this.studentFormGroup.value.address1;
     this.adr.address2 = this.studentFormGroup.value.address2;
     this.adr.city = this.studentFormGroup.value.city;
     this.adr.zipCode = this.studentFormGroup.value.zipCode;
     this.adr.country = this.studentFormGroup.value.country;
     this.studentModel.address = this.adr;
-
     this.studentModel.firstName = this.studentFormGroup.value.firstName;
     this.studentModel.lastName = this.studentFormGroup.value.lastName;
     this.studentModel.dateOfBirth = this.studentFormGroup.value.dateOfBirth;
     this.studentModel.email = this.studentFormGroup.value.email;
     this.studentModel.telephone = this.studentFormGroup.value.telephone;
     this.studentModel.image = this.studentFormGroup.value.image;
+    this.studentModel.password = this.studentFormGroup.value.password;
+
     this.studentModel.classe.id = this.studentFormGroup.value.classe;
     this.studentModel.school.id = this.idSchool
 
@@ -242,18 +247,12 @@ export class PageStudentComponent implements OnInit {
               this.studentFormGroup.reset();
               this.toastrService.success('Success!', 'Votre élève a été ajouté!');
             });
-
-
-
-
-
         },
       });
 
   }
 
   getStudent(studentId: number) {
-
     if (studentId != undefined && studentId != null) {
       this.studentService.findStudentById(studentId).subscribe(
         res => {
@@ -330,8 +329,14 @@ export class PageStudentComponent implements OnInit {
     this.studentModel.email = this.studentFormGroup2.value.email;
     this.studentModel.telephone = this.studentFormGroup2.value.telephone;
     this.studentModel.image = this.studentFormGroup2.value.image;
+    this.studentModel.password = this.studentFormGroup.value.password;
+
     this.studentModel.classe.id = this.studentFormGroup2.value.classe;
-    this.studentModel.school.id = this.studentFormGroup2.value.school;
+    let sch:School=new School();
+    sch.id= this.idSchool;
+    this.studentModel.school =sch
+
+    
 
 
     this.studentService.saveStudent(this.studentModel)

@@ -83,11 +83,23 @@
               <div class="form-group row mb-3">
                 <div class="col">
                   <label for="class">Classe</label>
-                  <select type="string" class="form-control" id="classe" formControlName="classe" required  name="classe">
+                  <select type="string" (change)="changeList($event,'subject')"  class="form-control" id="classe" formControlName="classe" required  name="classe">
                     <option *ngFor="let cls of classList" [value]="cls.id">{{cls.levelClass}} {{cls.labelClass}}</option>
                   </select>
                   <small *ngIf="seanceFormGroup.get('classe')?.invalid && seanceFormGroup.get('classe')?.touched"
                     class="text-danger">Classe est obligatoire</small>
+                </div>
+              </div>
+              
+  
+              <div class="form-group row mb-3">
+                <div class="col">
+                  <label for="subject">Matiére</label>
+                  <select  class="form-control" id="subject" (change)="changeList($event,'teacher')" formControlName="subject" required name="id">
+                    <option *ngFor="let cls of subjectList" [value]="cls.id" >{{cls.name}} {{cls.coefficient}}</option>
+                  </select>
+                  <small *ngIf="seanceFormGroup.get('subject')?.invalid && seanceFormGroup.get('subject')?.touched"
+                    class="text-danger">Matiére est obligatoire</small>
                 </div>
               </div>
               <div class="form-group row mb-3">
@@ -99,17 +111,6 @@
                   </select>
                   <small *ngIf="seanceFormGroup.get('teacher')?.invalid && seanceFormGroup.get('teacher')?.touched"
                     class="text-danger">Professeur est obligatoire</small>
-                </div>
-              </div>
-  
-              <div class="form-group row mb-3">
-                <div class="col">
-                  <label for="subject">Matiére</label>
-                  <select class="form-control" id="subject" formControlName="subject" required name="id">
-                    <option *ngFor="let cls of subjectList" [value]="cls.id">{{cls.name}} {{cls.coefficient}}</option>
-                  </select>
-                  <small *ngIf="seanceFormGroup.get('subject')?.invalid && seanceFormGroup.get('subject')?.touched"
-                    class="text-danger">Matiére est obligatoire</small>
                 </div>
               </div>
               <div class="form-group row mb-3">

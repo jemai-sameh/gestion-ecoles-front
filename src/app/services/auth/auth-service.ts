@@ -29,6 +29,7 @@ export class AuthService {
   setUserToken(authenticationResponse: AuthenticationResponse) {
     localStorage.setItem("accesstoken", JSON.stringify(authenticationResponse))
     this.addUserStorage();
+    console.log(JSON.stringify(authenticationResponse))
     // localStorage.setItem("mailUser",JSON.stringify(authenticationResponse.name))
   }
   register(registerRequest: RegisterRequest): Observable<AuthenticationResponse> {
@@ -51,8 +52,12 @@ export class AuthService {
     var user: any;
     user = localStorage.getItem("accesstoken");
     let token = JSON.parse(user).token;
+    console.log(JSON.parse(user))
+
     const decodedToken = JSON.parse(atob(token.split('.')[1]));
+    console.log(decodedToken)
     const mail = decodedToken.sub;
+    console.log(mail)
     this.findUser(mail).subscribe({
       next:data=> {
         console.log(data)

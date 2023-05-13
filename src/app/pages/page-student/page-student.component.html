@@ -9,9 +9,9 @@
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div  class="collapse navbar-collapse" id="navbarSupportedContent">
-          <button type="button" *ngIf="role =='ADMIN'" class="btn btn-info" data-toggle="modal" data-target="#addStudentModal"><i
-              class="si si-plus"></i> Ajouter </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <button type="button" *ngIf="role =='ADMIN'" class="btn btn-info" data-toggle="modal"
+            data-target="#addStudentModal"><i class="si si-plus"></i> Ajouter </button>
         </div>
       </div>
       <div class="container-fluid" id="searchbar">
@@ -52,9 +52,6 @@
             <td>{{student.telephone}}</td>
             <td>{{student.classe.levelClass}} {{student.classe.labelClass}}</td>
             <td>{{student.school.name}}</td>
-
-
-
             <td>
               <a *ngIf="role=='ADMIN'" type="button" style="margin-right: 10px;" data-mdb-ripple-color="dark"
                 data-toggle="modal" data-target="#updateStudentModal" (click)="getStudent(student.id)"><i
@@ -64,10 +61,9 @@
               <a type="button" style="margin-right: 10px;" data-toggle="modal" data-target="#viewStudentModal"
                 (click)="viewStudent(student.id)"><i class="text-warning si si-eye"></i> </a>
 
-                <a type="button" style="margin-right: 10px;"  *ngIf="role == 'TEACHER'" data-toggle="modal" data-target="#addAbsenceModal"
-                (click)="getStudent(student.id)"><i class="text-danger fa fa-exclamation-triangle"></i> </a>
-
-
+              <a type="button" style="margin-right: 10px;" *ngIf="role == 'TEACHER'" data-toggle="modal"
+                data-target="#addAbsenceModal" (click)="Absence(student)"><i
+                  class="text-danger fa fa-exclamation-triangle"></i> </a>
 
               <a type="button" *ngIf="role=='ADMIN'" style="margin-right: 10px;" (click)="UpdateStatus(student.id,-1)">
                 <i class="text-danger fas fa-times-circle  me-1"></i> </a>
@@ -123,10 +119,10 @@
                 <small *ngIf="submitted && studentFormGroup.get('firstName')?.invalid" class="text-danger">Prenom est
                   obligatoire</small>
               </div>
-             
+
             </div>
 
-           
+
 
             <div class="form-group row mb-3">
               <div class="col">
@@ -147,7 +143,7 @@
 
 
 
-           
+
             <div class="form-group row mb-3">
               <div class="col">
                 <label for="exampleFormControlInput1">N° Tel</label>
@@ -163,7 +159,7 @@
                 <small *ngIf="submitted && studentFormGroup.get('dateOfBirth')?.invalid" class="text-danger">Date de
                   naissane est obligatoire</small>
               </div>
-             
+
             </div>
             <div class="form-group row mb-3">
               <div class="col">
@@ -191,7 +187,7 @@
                   est obligatoire</small>
               </div>
               <div class="col">
-            
+
                 <label for="exampleFormControlInput1">Ville</label>
                 <input class="form-control" id="City" required formControlName="city" name="city" type="string"
                   [(ngModel)]="adr.city" />
@@ -200,10 +196,10 @@
               </div>
             </div>
 
-            
+
 
             <div class="form-group row mb-3">
-              
+
               <div class="col">
                 <label for="exampleFormControlInput1">Pays</label>
                 <input class="form-control" id="Country" required formControlName="country" name="country" type="string"
@@ -285,10 +281,10 @@
                 <small *ngIf="submitted && studentFormGroup2.get('firstName')?.invalid" class="text-danger">Prenom est
                   obligatoire</small>
               </div>
-              
+
             </div>
 
-           
+
 
             <div class="form-group row mb-3">
               <div class="col">
@@ -299,8 +295,10 @@
               </div>
               <div class="col">
                 <label for="password">Mot de passe</label>
-                <input class="form-control" id="password" required formControlName="password" name="password" type="password" />
-                <small *ngIf="submitted && studentFormGroup2.get('password')?.invalid" class="text-danger">Mot de passe est
+                <input class="form-control" id="password" required formControlName="password" name="password"
+                  type="password" />
+                <small *ngIf="submitted && studentFormGroup2.get('password')?.invalid" class="text-danger">Mot de passe
+                  est
                   obligatoire</small>
               </div>
             </div>
@@ -320,7 +318,7 @@
                 <small *ngIf="submitted && studentFormGroup2.get('dateOfBirth')?.invalid" class="text-danger">Date de
                   naissance est obligatoire</small>
               </div>
-              
+
             </div>
             <div class="form-group row mb-3">
               <div class="col">
@@ -458,45 +456,46 @@
   </div>
 
 
-   <!-- Modal Add Absence -->
+  <!-- Modal Add Absence -->
   <div class="modal fade" id="addAbsenceModal" tabindex="-1" role="dialog" aria-labelledby="addAbsenceModalName"
-   aria-hidden="true">
-   <div class="modal-dialog" role="document">
-     <div class="modal-content">
-       <div class="modal-header">
-         <h5 class="modal-title" id="addAbsenceModalName">Ajout de l'absence à l'étudiant {{studentModel?.firstName}} {{studentModel?.lastName}}</h5>
-         <button #closeModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
-           <span aria-hidden="true">&times;</span>
-         </button>
-       </div>
-       <div class="modal-body">
-         <!-- form add -->
-         <form [formGroup]="absenceFormGroup">
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addAbsenceModalName">Ajout de l'absence à l'étudiant {{studentModel?.firstName}}
+            {{studentModel?.lastName}}</h5>
+          <button #closeModalBtn type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- form add -->
+          <form [formGroup]="absenceFormGroup">
 
-           <div class="form-group">
-             <label for="dateAbsence">Date</label>
-             <input class="form-control" id="dateAbsence" required formControlName="dateAbsence" name="dateAbsence"
-               type="date" #dateAbsence value=" date:'dd-MM-yyyy'" />
-             <small *ngIf="submitted && absenceFormGroup.get('dateAbsence')?.invalid" class="text-danger">Date est
-               obligatoire</small>
-           </div>
+            <div class="form-group">
+              <label for="dateAbsence">Date</label>
+              <input class="form-control" id="dateAbsence" required formControlName="dateAbsence" name="dateAbsence"
+                type="date" #dateAbsence value=" date:'dd-MM-yyyy'" />
+              <small *ngIf="submitted && absenceFormGroup.get('dateAbsence')?.invalid" class="text-danger">Date est
+                obligatoire</small>
+            </div>
 
-           <div class="form-group">
-             <label for="exampleFormControlInput1">Type</label>
-             <input class="form-control" id="Type" required formControlName="type" name="type" type="string" />
-             <small *ngIf="submitted && absenceFormGroup.get('type')?.invalid" class="text-danger">Type est
-               obligatoire</small>
-           </div>
-           <div class="form-group">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Type</label>
+              <input class="form-control" id="Type" required formControlName="type" name="type" type="string" />
+              <small *ngIf="submitted && absenceFormGroup.get('type')?.invalid" class="text-danger">Type est
+                obligatoire</small>
+            </div>
+            <div class="form-group">
               <label for="seance">Seance</label>
               <select class="form-control" name="seance" id="seance" formControlName="seance" required>
-                <option *ngFor="let seance of seanceList" [value]="seance.id"> {{seance.day}} => 
+                <option *ngFor="let seance of seanceList" [value]="seance.id"> {{seance.day}} =>
                   {{seance.subject.name}}</option>
               </select>
               <small *ngIf="submitted && absenceFormGroup.get('seance')?.invalid" class="text-danger">Seance est
                 obligatoire</small>
-           </div>
-           <!--<div class="form-group">
+            </div>
+            <!--<div class="form-group">
              <label for="exampleFormControlInput1">Seance</label>
              <select class="form-control" id="seance" formControlName="seance" required [(ngModel)]="absenceModel.seance" name="id">
                <option *ngFor="let seance of seanceList" [value]="seance.id"> :{{seance.day}} => 
@@ -508,14 +507,14 @@
 
           -->
 
-           <button class="btn btn-primary" (click)="addAbsence()">Ajouter</button>
+            <button class="btn btn-primary" (click)="addAbsence()">Ajouter</button>
 
-         </form>
+          </form>
 
-       </div>
+        </div>
 
-     </div>
-   </div>
- </div>
+      </div>
+    </div>
+  </div>
 </div>
 <!-- main-content closed -->

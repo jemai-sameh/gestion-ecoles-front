@@ -1,6 +1,8 @@
+import { SchoolsService } from './../../../services/schools.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { School } from 'src/app/models/School';
 import { Address } from 'src/app/models/address';
 import { Classe } from 'src/app/models/classe';
 import { RegisterRequest } from 'src/app/models/securite/registerRequest';
@@ -16,20 +18,35 @@ export class RegisterComponent implements OnInit {
 
   adr: Address = new Address();
   classList : Classe[] = [];
+  schoolList:School[]=[];
   registerRequest: RegisterRequest = new RegisterRequest();
   errorMsg ! : string;
   file!: File;
   imgUrl: string | ArrayBuffer = 'assets/img/avatar.png'
-  constructor(private authService : AuthService, private router: Router, private classService:ClassService) { }
+  constructor(private authService : AuthService,private schoolsService:SchoolsService, private router: Router, private classService:ClassService) { }
 
   ngOnInit(): void {
     this.registerRequest.classe.id =-1;
-    this.getClasses();
+    this.getSchool();
+   // this.getClasses();
 
   }
-  getClasses()
+  getSchool()
   {
-    this.classService.findAllClass().subscribe(
+    this.schoolsService.getSchoolList().subscribe(
+      res => {
+        
+        this.schoolList = res
+      } , error => {
+        console.error(error)
+      } , () => {
+
+      }
+    )
+  }
+  getClasses(idSchool:number)
+  {
+    this.classService.findAll(idSchool).subscribe(
       res => {
         
         this.classList = res
@@ -39,6 +56,13 @@ export class RegisterComponent implements OnInit {
 
       }
     )
+  }
+  changeClass(event: any) {
+
+    console.log(event)
+    //let student: S = new Student();
+    //student.id = event;
+    this.getClasses(event);
   }
   register(){
     this.registerRequest.address=this.adr;

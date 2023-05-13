@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AdminService {
 
-  baseurladmin :string = environment.baseurl +"/admins"
+  baseurladmin :string = "http://localhost:8080/api/school/admins"
 
   constructor(private http: HttpClient) { }
 

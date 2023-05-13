@@ -19,14 +19,11 @@ export class LoginComponent implements OnInit {
     localStorage.removeItem("accesstoken")
     localStorage.removeItem("idSchool")
     localStorage.removeItem("mailUser")
-
   }
   login(){
     this.authService.login(this.authenticationRequest).subscribe(
       ress =>{
         this.authService.setUserToken(ress)
-
-
         this.router.navigate(["/acc/home"])
 
       },error =>{

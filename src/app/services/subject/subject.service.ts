@@ -34,7 +34,14 @@ export class SubjectService {
       map((response:any) => response as Subject[])
     );
     
-  }
+  } 
+  findAllSubjectsByClass(idSubject:number,idSchool:number): Observable<Subject[]> {
+    return this.http.get<Subject[]>(`${this.baseUrlSubject}/findAllSubjectsByClass/`+idSubject+`/`+idSchool)
+    .pipe(
+      map((response:any) => response as Subject[])
+    );
+    
+  } 
 
   deleteSubject(id: any): Observable<any> {
     return this.http.delete(`${this.baseUrlSubject}/deleteSubject/${id}`,{ responseType: 'text' });

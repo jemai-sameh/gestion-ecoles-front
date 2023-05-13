@@ -25,14 +25,6 @@
             </a>
           </li>
           <li *ngIf="role=='SUPER_ADMIN'" class="nav-item nav-category">
-            <a routerLink="admins" class="nav-link">
-              <i class="nav-icon fas fa-school"></i>
-              <p>
-                Admin
-              </p>
-            </a>
-          </li>
-          <li *ngIf="role=='SUPER_ADMIN'" class="nav-item nav-category">
             <a routerLink="schools" class="nav-link">
               <i class="nav-icon fas fa-school"></i>
               <p>
@@ -40,6 +32,15 @@
               </p>
             </a>
           </li>
+          <li *ngIf="role=='SUPER_ADMIN'" class="nav-item nav-category">
+            <a routerLink="admins" class="nav-link">
+              <i class="nav-icon fas fa-school"></i>
+              <p>
+                Admin
+              </p>
+            </a>
+          </li>
+          
           <li *ngIf="role=='ADMIN' " class="nav-item">
             <a routerLink="Sections" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
@@ -98,14 +99,14 @@
             </a>
           </li>
           
-          <li *ngIf="role=='ADMIN' || role=='TEACHER' || role=='STUDENT'" class="nav-item">
+          <!--<li *ngIf="role=='ADMIN' || role=='TEACHER' || role=='STUDENT'" class="nav-item">
             <a routerLink="plannings" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
                 Emploi du temps
               </p>
             </a>
-          </li>
+          </li>-->
           <li *ngIf="role=='ADMIN' || role=='TEACHER' || role=='STUDENT'" class="nav-item">
             <a routerLink="absences" class="nav-link">
               <i class="nav-icon fas fa-th"></i>

@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { School } from 'src/app/models/School';
 import { Address } from 'src/app/models/address';
 import { Subject } from 'src/app/models/subject';
 import { Teacher } from 'src/app/models/teacher';
@@ -167,7 +168,9 @@ export class PageTeacherComponent implements OnInit {
     this.teacherModel.telephone = this.teacherFormGroup.value.telephone;
     this.teacherModel.image = this.teacherFormGroup.value.image;
     this.teacherModel.subject.id = this.teacherFormGroup.value.subject
-    this.teacherModel.school.id = this.idSchool
+    let sch:School=new School();
+    sch.id=this.idSchool
+    this.teacherModel.school= sch
 
     this.teacherService.saveTeacher(this.teacherModel)
       .subscribe({
@@ -212,6 +215,7 @@ export class PageTeacherComponent implements OnInit {
           this.teacherFormGroup2.get("email")?.setValue(this.teacherModel.email);
           this.teacherFormGroup2.get("telephone")?.setValue(this.teacherModel.telephone);
           this.teacherFormGroup2.get("image")?.setValue(this.teacherModel.image);
+         // this.teacherFormGroup2.get("password")?.setValue(this.teacherModel.password);
           this.teacherFormGroup2.get("subject")?.setValue(this.teacherModel.subject.id);
           this.teacherFormGroup2.updateValueAndValidity()
         });
@@ -236,9 +240,13 @@ export class PageTeacherComponent implements OnInit {
 
     this.teacherModel.email = this.teacherFormGroup2.value.email;
     this.teacherModel.telephone = this.teacherFormGroup2.value.telephone;
+   // this.teacherModel.password = this.teacherFormGroup2.value.password;
     this.teacherModel.image = this.teacherFormGroup2.value.image;
     this.teacherModel.subject.id = this.teacherFormGroup2.value.subject;
-    this.teacherModel.school.id = this.idSchool;
+    let sch:School=new School();
+    sch.id=this.idSchool;
+    this.teacherModel.school= sch
+
 
     this.teacherService.saveTeacher(this.teacherModel)
       .subscribe({

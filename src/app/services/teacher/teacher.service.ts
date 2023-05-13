@@ -49,6 +49,11 @@ export class TeacherService {
       map((response:any) => response as Teacher)
     );
   }
+  findAllTeacherBySubject(idSubject: number,idSchool: number): Observable<Teacher[]> {
+    return this.http.get<Teacher[]>(`${this.baseurlteacher}/findAllBySubject/${idSubject}/${idSchool}`).pipe(
+      map((response:any) => response as Teacher[])
+    );
+  }
   getTeacherById(id: number): Observable<Teacher> {
     return this.http.get(`${this.baseurlteacher}/findTeacher/${id}`).pipe(
       map((response:any) => response as Teacher)

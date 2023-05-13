@@ -30,7 +30,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let room of classRoomList | orderBy: key1: reverse | paginate: {itemsPerPage:3,currentPage:p} , index as i"
-            class="tab-sub">
+            class="tab-sec">
             <td>{{room.id}}</td>
             <td>{{room.classRoomNumber}}</td>
             <td>{{room.bloc}}</td>
@@ -47,6 +47,8 @@
           </tr>
         </tbody>
       </table>
+      <pagination-controls (pageChange)="p = $event"></pagination-controls>
+
     </div>
   </div>
 

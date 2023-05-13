@@ -10,7 +10,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addSectionModal"><i
+          <button *ngIf="role=='ADMIN'"  type="button" class="btn btn-info" data-toggle="modal" data-target="#addSectionModal"><i
               class="si si-plus"></i> Ajouter </button>
         </div>
       </div>

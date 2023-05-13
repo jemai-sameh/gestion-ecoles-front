@@ -227,30 +227,56 @@
                                                                                 value="{{registerRequest.dateOfBirth}}">
                                                                         </div>
                                                                     </div>
+                                                                </div>
+                                                                <div class="form-group row mb-2">
+
                                                                     <div class="col">
                                                                         <div class="input-group">
                                                                             <div class="input-group-prepend">
                                                                                 <span class="input-group-text"><i
                                                                                         class="si si-layers"></i></span>
                                                                             </div>
-                                                                            <select class="form-control" id="classe"
+                                                                            <select class="form-control" id="school" (ngModelChange)="changeClass($event)" 
                                                                                 required
-                                                                                [(ngModel)]="registerRequest.classe.id"
-                                                                                name="classe" type="string"
+                                                                                [(ngModel)]="registerRequest.school.id"
+                                                                                name="school" type="string"
                                                                                 style="background-color: #fff; color: #000;">
                                                                                 <option value=-1 disabled checked>
-                                                                                    Sélectionner votre classe</option>
-                                                                                <option *ngFor="let cls of classList"
-                                                                                    [value]="cls.id">{{cls.levelClass}}
-                                                                                    {{cls.labelClass}}
+                                                                                    Sélectionner votre ecole</option>
+                                                                                <option *ngFor="let cls of schoolList"
+                                                                                    [value]="cls.id">{{cls.name}}
                                                                                 </option>
                                                                             </select>
                                                                         </div>
                                                                     </div>
+                                                                    </div>
+                                                                <div class="form-group row mb-2">
+
+                                                                <div class="col">
+                                                                    <div class="input-group">
+                                                                        <div class="input-group-prepend">
+                                                                            <span class="input-group-text"><i
+                                                                                    class="si si-layers"></i></span>
+                                                                        </div>
+                                                                        <select class="form-control" id="classe"
+                                                                            required
+                                                                            [(ngModel)]="registerRequest.classe.id"
+                                                                            name="classe" type="string"
+                                                                            style="background-color: #fff; color: #000;">
+                                                                            <option value=-1 disabled checked>
+                                                                                Sélectionner votre classe</option>
+                                                                            <option *ngFor="let cls of classList"
+                                                                                [value]="cls.id">{{cls.levelClass}}
+                                                                                {{cls.labelClass}}
+                                                                            </option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
                                                                 </div>
                                                                 <a class="btn btn-primary btn-block"
                                                                     (click)="register()">S'inscrire <i
-                                                                        class="fas fa-check" aria-hidden="true"></i></a>
+                                                                        class="fas fa-check" aria-hidden="true"></i>
+                                                                </a>
                                                             </form>
                                                         </div>
                                                     </div>

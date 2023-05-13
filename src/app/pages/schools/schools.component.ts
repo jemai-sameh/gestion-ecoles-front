@@ -15,6 +15,8 @@ import { Router } from '@angular/router';
 })
 export class SchoolsComponent implements OnInit {
   id: any
+  p: number = 1;
+
   submitted = false;
   schools: any;
   school: School = new School();
@@ -105,7 +107,7 @@ export class SchoolsComponent implements OnInit {
       .subscribe({
         next: (res) => {
           console.log(res);
-          alert('School created successfully');
+          this.toastrService.success('Success!', 'Votre School a été ajouter!');
           location.reload();
 
         },

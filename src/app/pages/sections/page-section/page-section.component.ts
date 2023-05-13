@@ -26,6 +26,7 @@ export class PageSectionComponent implements OnInit {
 
   letters!:string;
   idSchool!:number;
+  role!:string
 
   @ViewChild('closeModalBtn') closeModalBtn!: ElementRef;
   @ViewChild('closeUpdateModalBtn') closeUpdateModalBtn!: ElementRef;
@@ -37,6 +38,8 @@ export class PageSectionComponent implements OnInit {
   ) {
     var user1: any = localStorage.getItem('user');
     this.user = JSON.parse(user1);
+    this.role = this.authService.getRole()
+
 
   }
   ngOnInit(): void {

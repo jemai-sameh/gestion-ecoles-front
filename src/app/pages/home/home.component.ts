@@ -13,11 +13,12 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     // console.log(this.a.getRole())
-     var user: any;
+    var user: any;
     user = localStorage.getItem('user');    
     this.user=JSON.parse(user);
     console.log(this.user)
     this.role=this.a.getRole()
+    console.log(this.role)
 
   }
 
